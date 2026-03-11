@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Said | Portafolio UI/UX & Fullstack</title>
+    
+    <!-- Animate.css CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --accent-glow: #00f2fe;
+            --accent-secondary: #4facfe;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-body: 'Outfit', sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Fondos Animados Complex --- */
+        .ambient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #0a0a0a 0%, #000000 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-glow);
+            top: -10%;
+            left: -10%;
+            animation-duration: 25s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #7b2cbf;
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 30s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        /* --- Navegación (Glassmorphism) --- */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 10px 30px;
+            display: flex;
+            gap: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav button:hover {
+            color: var(--text-main);
+        }
+
+        nav button.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+        }
+
+        /* --- Contenedor Principal SPA --- */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Utilidad para ocultar/mostrar secciones */
+        .page-section {
+            display: none;
+            width: 100%;
+        }
+
+        .page-section.active-section {
+            display: block; /* Controlado por JS, se volverá flex o grid según necesite */
+        }
+
+        /* --- Componentes Glassmorphism --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg);
+            animation: shine 8s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* --- Estilos por Sección --- */
+        
+        /* Hero */
+        .hero-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--accent-glow);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .status-badge i { font-size: 0.6rem; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 1; text-shadow: 0 0 5px var(--accent-glow); }
+            50% { opacity: 0.4; text-shadow: none; }
+            100% { opacity: 1; text-shadow: 0 0 5px var(--accent-glow); }
+        }
+
+        h1.glitch-title {
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-glow));
+            color: #000;
+            font-weight: 800;
+            padding: 16px 36px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        /* Sobre Mí */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-card h3 { color: var(--accent-glow); font-size: 2rem; font-family: var(--font-display); }
+        .stat-card p { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;}
+
+        /* Skills */
+        .skills-header { text-align: center; margin-bottom: 40px; }
+        .skills-header h2 { font-family: var(--font-display); font-size: 3rem; }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--accent-glow);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.2);
+            color: var(--accent-glow);
+        }
+
+        .skill-tag i { font-size: 1.4rem; }
+
+        .logic-skills {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .logic-skills h3 {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        /* Proyectos */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0, 242, 254, 0.1);
+        }
+
+        .project-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 242, 254, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--accent-glow);
+            margin-bottom: 20px;
+        }
+
+        .project-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .project-tech span {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            color: var(--accent-secondary);
+        }
+
+        /* Contacto */
+        .contact-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-content h2 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 15px 40px;
+            border-radius: 30px;
+            color: #fff;
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(220, 39, 67, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1.glitch-title { font-size: 3rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            nav { width: 90%; overflow-x: auto; justify-content: flex-start; padding: 10px 20px;}
+            nav::-webkit-scrollbar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondos Abstractos -->
+    <div class="ambient-background">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- Navegación SPA -->
+    <nav>
+        <button class="nav-btn active" onclick="navigateTo('hero')" id="btn-hero">Inicio</button>
+        <button class="nav-btn" onclick="navigateTo('about')" id="btn-about">Sobre Mí</button>
+        <button class="nav-btn" onclick="navigateTo('skills')" id="btn-skills">Skills</button>
+        <button class="nav-btn" onclick="navigateTo('projects')" id="btn-projects">Proyectos</button>
+        <button class="nav-btn" onclick="navigateTo('contact')" id="btn-contact">Contacto</button>
+    </nav>
+
+    <main>
+        <!-- SECCIÓN: HERO -->
+        <section id="hero" class="page-section active-section">
+            <div class="hero-content animate__animated animate__fadeInUp">
+                <div class="status-badge">
+                    <i class="fa-solid fa-circle"></i> Sistema Online
+                </div>
+                <h1 class="glitch-title">SAID</h1>
+                <p class="hero-subtitle">Desarrollador enfocado en interfaces fluidas, lógicas complejas y rendimiento extremo. Transformando ideas complejas en experiencias digitales de alto nivel.</p>
+                <button class="btn-primary" onclick="navigateTo('projects')">Ver Proyectos <i class="fa-solid fa-arrow-right ms-2"></i></button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: SOBRE MÍ -->
+        <section id="about" class="page-section">
+            <div class="glass-card about-grid animate__animated">
+                <div class="about-text">
+                    <h2>Contexto & Visión</h2>
+                    <p>Tengo <strong>21 años</strong> y soy de la <strong>Ciudad de Guatemala</strong>. Actualmente soy estudiante en la <strong>Universidad Mariano Gálvez de Guatemala (UMG)</strong>.</p>
+                    <p>Mi enfoque en la programación se basa en salir de lo convencional. No me conformo con interfaces básicas; busco la fluidez arquitectónica, el diseño disruptivo y la optimización de recursos.</p>
+                    <div class="about-stats mt-4">
+                        <div class="stat-card">
+                            <h3>21</h3>
+                            <p>Años de Edad</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>UMG</h3>
+                            <p>Estudiante Activo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visuals" style="text-align: center;">
+                    <i class="fa-brands fa-connectdevelop" style="font-size: 12rem; color: rgba(255,255,255,0.05); text-shadow: 0 0 50px rgba(0,242,254,0.2);"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: SKILLS -->
+        <section id="skills" class="page-section">
+            <div class="animate__animated">
+                <div class="skills-header">
+                    <h2>Arsenal Tecnológico</h2>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">Visualización compleja de lenguajes y herramientas estructurales.</p>
+                </div>
+
+                <div class="skills-container">
+                    <!-- Tech Stack -->
+                    <div class="skill-tag"><i class="fa-brands fa-html5" style="color: #e34f26;"></i> HTML5</div>
+                    <div class="skill-tag"><i class="fa-brands fa-css3-alt" style="color: #1572b6;"></i> CSS3 Advanced</div>
+                    <div class="skill-tag"><i class="fa-brands fa-js" style="color: #f7df1e;"></i> JavaScript ES6+</div>
+                    <div class="skill-tag"><i class="fa-brands fa-php" style="color: #777bb4;"></i> PHP</div>
+                    <div class="skill-tag"><i class="fa-solid fa-database" style="color: #336791;"></i> SQL</div>
+                    <div class="skill-tag"><i class="fa-solid fa-file-excel" style="color: #107c41;"></i> Macros VBA</div>
+                </div>
+
+                <div class="logic-skills glass-card" style="margin-top: 50px; padding: 30px;">
+                    <h3><i class="fa-solid fa-brain me-2"></i> Fundamentos Lógicos y Analíticos</h3>
+                    <div class="skills-container" style="gap: 20px;">
+                        <div class="skill-tag" style="background: rgba(123, 44, 191, 0.1); border-color: rgba(123, 44, 191, 0.3);">
+                            <i class="fa-solid fa-calculator" style="color: #c77dff;"></i> Cálculo (Matemáticas)
+                        </div>
+                        <div class="skill-tag" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+                            <i class="fa-solid fa-chart-line" style="color: #34d399;"></i> Microeconomía
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: PROYECTOS -->
+        <section id="projects" class="page-section">
+            <div class="animate__animated">
+                <h2 style="font-family: var(--font-display); font-size: 3rem; text-align: center; margin-bottom: 10px;">Proyectos Destacados</h2>
+                <p style="text-align: center; color: var(--text-muted);">Soluciones lógicas llevadas a código.</p>
+                
+                <div class="projects-grid">
+                    <!-- Proyecto 1 -->
+                    <div class="project-card">
+                        <div class="project-icon"><i class="fa-solid fa-school"></i></div>
+                        <h3>Gestión Escolar Web</h3>
+                        <p>Sistema integral desarrollado para la administración académica. Interfaces fluidas y gestión de bases de datos robusta para el manejo de alumnos y calificaciones.</p>
+                        <div class="project-tech">
+                            <span>HTML/CSS</span>
+                            <span>JavaScript</span>
+                            <span>PHP</span>
+                            <span>SQL</span>
+                        </div>
+                    </div>
+
+                    <!-- Proyecto 2 -->
+                    <div class="project-card">
+                        <div class="project-icon"><i class="fa-solid fa-users-gear"></i></div>
+                        <h3>Sistemas VBA Multi-usuario</h3>
+                        <p>Desarrollo avanzado en Excel utilizando macros (VBA). Creación de menús interactivos y formularios de login con validación para múltiples usuarios.</p>
+                        <div class="project-tech">
+                            <span>Excel Advanced</span>
+                            <span>VBA Macros</span>
+                            <span>Lógica UI</span>
+                        </div>
+                    </div>
+
+                    <!-- Proyecto 3 -->
+                    <div class="project-card">
+                        <div class="project-icon"><i class="fa-solid fa-filter"></i></div>
+                        <h3>Reportes de Datos Complejos</h3>
+                        <p>Creación de sistemas de reportería automatizada con filtros avanzados. Extracción, limpieza y visualización de datos para la toma de decisiones.</p>
+                        <div class="project-tech">
+                            <span>SQL</span>
+                            <span>VBA</span>
+                            <span>Data Analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: CONTACTO -->
+        <section id="contact" class="page-section">
+            <div class="glass-card contact-content animate__animated">
+                <h2>¿Iniciamos un proyecto?</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px;">
+                    Si buscas salir de lo convencional y necesitas interfaces rápidas con lógica compleja, contáctame.
+                </p>
+                
+                <a href="https://instagram.com/saidfabian_000" target="_blank" class="social-link">
+                    <i class="fa-brands fa-instagram" style="font-size: 1.5rem;"></i>
+                    @saidfabian_000
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script de Lógica SPA y Animaciones -->
+    <script>
+        function navigateTo(targetId) {
+            // 1. Obtener todas las secciones y botones
+            const sections = document.querySelectorAll('.page-section');
+            const buttons = document.querySelectorAll('.nav-btn');
+
+            // 2. Ocultar todas las secciones y resetear clases de animación
+            sections.forEach(section => {
+                section.style.display = 'none'; // Esconder físicamente
+                section.classList.remove('active-section');
+                
+                // Buscar el contenedor hijo que tiene la animación y resetearlo
+                const animatedContent = section.querySelector('.animate__animated');
+                if(animatedContent) {
+                    animatedContent.classList.remove('animate__fadeInUp', 'animate__zoomIn', 'animate__fadeIn');
+                }
+            });
+
+            // 3. Actualizar estado visual de los botones de navegación
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + targetId).classList.add('active');
+
+            // 4. Mostrar la sección solicitada
+            const targetSection = document.getElementById(targetId);
+            
+            // Usamos display block o flex dependiendo de si es la grid de about o flex
+            targetSection.style.display = 'block'; 
+            targetSection.classList.add('active-section');
+
+            // 5. Re-inyectar la clase de animación para que se ejecute al instante
+            const targetAnimatedContent = targetSection.querySelector('.animate__animated');
+            if(targetAnimatedContent) {
+                // Forzar un "reflow" para que el navegador reinicie la animación CSS
+                void targetAnimatedContent.offsetWidth; 
+                
+                // Añadir la animación deseada (ej. fadeInUp)
+                targetAnimatedContent.classList.add('animate__fadeInUp');
+            }
+        }
+    </script>
+</body>
+</html>

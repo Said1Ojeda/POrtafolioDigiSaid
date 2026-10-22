@@ -160,7 +160,11 @@ details .lista{margin:14px 0 0}
 .canal span{opacity:.75;font-size:.95rem}
 .canal.principal{background:var(--sol);color:#14213D}
 .canal.principal span{opacity:.85}
-@media (prefers-color-scheme:dark){.contacto{background:var(--hoja);border:1px solid var(--linea)}}
+@media (prefers-color-scheme:dark){
+  .contacto{background:var(--hoja);color:var(--tinta);border:1px solid var(--linea)}
+  .canal{background:color-mix(in srgb,var(--tinta) 7%,transparent)}
+  .canal:hover{background:color-mix(in srgb,var(--tinta) 13%,transparent)}
+}
 
 footer{padding:40px 0 56px;color:var(--tinta-suave);font-size:.92rem}
 footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}

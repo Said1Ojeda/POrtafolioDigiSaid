@@ -1,2095 +1,488 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Said Fabián — Developer</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
-
-  <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-  <style>
-    /* ─── RESET & BASE ─────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #060810;
-      --bg2:       #0d1020;
-      --glass:     rgba(255,255,255,0.04);
-      --glass-b:   rgba(255,255,255,0.10);
-      --accent:    #00f0c8;
-      --accent2:   #7b5cff;
-      --accent3:   #ff4d6d;
-      --text:      #e8eaf0;
-      --muted:     #6b7280;
-      --text-soft: rgba(232,234,240,.68);
-      --border:    rgba(255,255,255,0.08);
-      --font-head: 'Syne', sans-serif;
-      --font-mono: 'DM Mono', monospace;
-      --font-body: 'Outfit', sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      min-height: 100vh;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* ─── CUSTOM CURSOR ─────────────────────────────────────────────── */
-    #cursor {
-      position: fixed; z-index: 9999;
-      width: 12px; height: 12px;
-      background: var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform .15s ease, width .2s, height .2s, background .2s;
-      mix-blend-mode: screen;
-    }
-    #cursor-ring {
-      position: fixed; z-index: 9998;
-      width: 36px; height: 36px;
-      border: 1.5px solid var(--accent);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: transform .35s ease, width .25s, height .25s, border-color .25s;
-      opacity: .55;
-    }
-    body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; }
-    body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 56px; height: 56px; border-color: var(--accent2); }
-
-    /* ─── NOISE OVERLAY ─────────────────────────────────────────────── */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      opacity: .5;
-    }
-
-    /* ─── AMBIENT BLOBS ─────────────────────────────────────────────── */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      pointer-events: none;
-      z-index: 0;
-      animation: blobDrift 18s ease-in-out infinite alternate;
-    }
-    .blob-1 { width: 600px; height: 600px; background: rgba(0,240,200,.07); top: -200px; left: -150px; }
-    .blob-2 { width: 500px; height: 500px; background: rgba(123,92,255,.09); bottom: -150px; right: -100px; animation-delay: -9s; }
-    .blob-3 { width: 300px; height: 300px; background: rgba(255,77,109,.06); top: 40%; left: 60%; animation-delay: -4s; }
-    @keyframes blobDrift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px, 30px) scale(1.08); } }
-
-    /* ─── GRID LINES BG ─────────────────────────────────────────────── */
-    .grid-bg {
-      position: fixed; inset: 0; z-index: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-
-    /* ─── NAVBAR ────────────────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.2rem 3rem;
-      background: rgba(6,8,16,.7);
-      backdrop-filter: blur(24px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: var(--font-head);
-      font-weight: 800; font-size: 1.4rem;
-      color: var(--accent);
-      letter-spacing: -.02em;
-    }
-    .nav-logo span { color: var(--text); }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links li a {
-      font-family: var(--font-mono);
-      font-size: .78rem;
-      color: var(--muted);
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      transition: color .2s, background .2s, transform .2s;
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: .45rem;
-    }
-    .nav-links li a i { font-size: .86rem; line-height: 1; }
-    .nav-links li a::after {
-      content: '';
-      position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 1px;
-      background: var(--accent);
-      transition: width .25s;
-    }
-    .nav-links li a:hover, .nav-links li a.active { color: var(--accent); }
-    .nav-links li a:hover::after, .nav-links li a.active::after { width: 100%; }
-    .nav-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
-
-    /* ─── SECTIONS WRAPPER ──────────────────────────────────────────── */
-    .section {
-      display: none;
-      position: relative; z-index: 2;
-      min-height: 100vh;
-      padding: 120px 3rem 4rem;
-    }
-    .section.active { display: block; }
-
-    /* ─── HERO ──────────────────────────────────────────────────────── */
-    #hero {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 100px;
-    }
-    #hero.active { display: flex; }
-
-    .hero-tag {
-      font-family: var(--font-mono);
-      font-size: .78rem;
-      color: var(--accent);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: .75rem;
-    }
-    .hero-tag::before {
-      content: '';
-      display: inline-block; width: 40px; height: 1px;
-      background: var(--accent);
-    }
-
-    .hero-name {
-      font-family: var(--font-head);
-      font-weight: 800;
-      font-size: clamp(4rem, 11vw, 9rem);
-      line-height: .92;
-      letter-spacing: -.04em;
-      margin-bottom: 1.5rem;
-    }
-    .hero-name .line-1 { display: block; color: var(--text); }
-    .hero-name .line-2 {
-      display: block;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-subtitle {
-      font-family: var(--font-mono);
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 500px;
-      line-height: 1.7;
-      margin-bottom: 3rem;
-    }
-    .hero-subtitle .hl { color: var(--accent); }
-
-    .hero-cta {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-    }
-    .btn {
-      font-family: var(--font-mono);
-      font-size: .82rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: .85rem 2rem;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all .25s;
-      display: inline-flex; align-items: center; gap: .5rem;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: var(--bg);
-      font-weight: 600;
-    }
-    .btn-primary:hover { background: #00d4b0; box-shadow: 0 0 30px rgba(0,240,200,.35); transform: translateY(-2px); }
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 3rem; left: 3rem;
-      display: flex; align-items: center; gap: 1rem;
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--muted);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-    }
-    .hero-scroll::before {
-      content: '';
-      display: block;
-      width: 1px; height: 60px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-    }
-
-    .hero-floats {
-      position: absolute;
-      right: 5%; top: 50%;
-      transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 1.2rem;
-    }
-    .float-card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      border-radius: 12px;
-      padding: 1rem 1.4rem;
-      min-width: 200px;
-      animation: floatY 6s ease-in-out infinite alternate;
-    }
-    .float-card:nth-child(2) { animation-delay: -2s; margin-left: 2rem; }
-    .float-card:nth-child(3) { animation-delay: -4s; }
-    @keyframes floatY { from{transform:translateY(0)} to{transform:translateY(-14px)} }
-    .float-card .fc-label {
-      font-family: var(--font-mono);
-      font-size: .68rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      margin-bottom: .3rem;
-    }
-    .float-card .fc-val {
-      font-family: var(--font-head);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .fc-accent { color: var(--accent) !important; }
-
-    /* ─── SECTION HEADER ────────────────────────────────────────────── */
-    .s-header { margin-bottom: 4rem; }
-    .s-tag {
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--accent);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      display: flex; align-items: center; gap: .75rem;
-      margin-bottom: 1rem;
-    }
-    .s-tag::before { content: ''; display: inline-block; width: 30px; height: 1px; background: var(--accent); }
-    .s-title {
-      font-family: var(--font-head);
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -.03em;
-      line-height: 1;
-    }
-    .s-title .g { background: linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-
-    /* ─── ABOUT ─────────────────────────────────────────────────────── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-    .about-text p {
-      font-size: 1.05rem;
-      line-height: 1.85;
-      color: rgba(232,234,240,.75);
-      margin-bottom: 1.5rem;
-    }
-    .about-text p strong { color: var(--accent); font-weight: 600; }
-    .about-text p em { color: var(--accent2); font-style: normal; font-weight: 600; }
-
-    .about-stats {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
-    }
-    .stat-card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      border-radius: 12px;
-      padding: 1.6rem;
-      transition: border-color .25s, transform .25s;
-    }
-    .stat-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-    .stat-num {
-      font-family: var(--font-head);
-      font-size: 2.4rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      line-height: 1;
-      margin-bottom: .4rem;
-    }
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--muted);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .timeline { margin-top: 2rem; }
-    .tl-item {
-      display: flex; gap: 1.4rem;
-      padding-bottom: 2rem;
-      position: relative;
-    }
-    .tl-item::before {
-      content: '';
-      position: absolute;
-      left: 18px; top: 36px;
-      width: 1px; height: calc(100% - 36px);
-      background: var(--border);
-    }
-    .tl-dot {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      background: var(--glass);
-      border: 1px solid var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      font-size: .9rem;
-    }
-    .tl-content .tl-year {
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-    }
-    .tl-content .tl-title {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 1rem;
-      margin: .2rem 0 .4rem;
-    }
-    .tl-content .tl-desc {
-      font-size: .88rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* ─── SKILLS ────────────────────────────────────────────────────── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .skill-card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      border-radius: 16px;
-      padding: 1.8rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color .3s, transform .3s;
-    }
-    .skill-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 0 0, var(--card-glow, rgba(0,240,200,.06)) 0%, transparent 70%);
-    }
-    .skill-card:hover { transform: translateY(-6px) scale(1.01); border-color: var(--card-accent, var(--accent)); }
-    .skill-card.purple { --card-accent: var(--accent2); --card-glow: rgba(123,92,255,.08); }
-    .skill-card.red    { --card-accent: var(--accent3); --card-glow: rgba(255,77,109,.06); }
-
-    .skill-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
-    .skill-name {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 1.15rem;
-      margin-bottom: .4rem;
-    }
-    .skill-desc {
-      font-size: .84rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 1.2rem;
-    }
-    .skill-bar-wrap {
-      background: rgba(255,255,255,.05);
-      border-radius: 100px;
-      height: 4px;
-      overflow: hidden;
-    }
-    .skill-bar {
-      height: 100%;
-      border-radius: 100px;
-      background: linear-gradient(90deg, var(--card-accent, var(--accent)), var(--accent2));
-      width: 0;
-      transition: width 1.2s cubic-bezier(.4,0,.2,1);
-    }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
-    .tag {
-      font-family: var(--font-mono);
-      font-size: .68rem;
-      padding: .3rem .7rem;
-      border-radius: 100px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      letter-spacing: .06em;
-    }
-
-    /* ─── PROJECTS ──────────────────────────────────────────────────── */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 2rem;
-    }
-    .proj-card {
-      background: var(--glass);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      overflow: hidden;
-      transition: transform .3s, border-color .3s, box-shadow .3s;
-      position: relative;
-    }
-    .proj-card:hover { transform: translateY(-8px); border-color: var(--p-accent,var(--accent)); box-shadow: 0 30px 80px rgba(0,0,0,.4); }
-
-    .proj-header {
-      padding: 2rem 2rem 0;
-      display: flex; align-items: flex-start; justify-content: space-between;
-    }
-    .proj-icon {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, var(--p-accent, var(--accent)), var(--accent2));
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
-    }
-    .proj-badge {
-      font-family: var(--font-mono);
-      font-size: .68rem;
-      padding: .35rem .8rem;
-      border-radius: 100px;
-      background: rgba(0,240,200,.1);
-      color: var(--accent);
-      border: 1px solid rgba(0,240,200,.2);
-      letter-spacing: .08em;
-    }
-    .proj-badge.vba { background: rgba(123,92,255,.1); color: var(--accent2); border-color: rgba(123,92,255,.2); }
-    .proj-badge.data { background: rgba(255,77,109,.1); color: var(--accent3); border-color: rgba(255,77,109,.2); }
-
-    .proj-body { padding: 1.5rem 2rem 2rem; }
-    .proj-title {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-bottom: .7rem;
-      letter-spacing: -.02em;
-    }
-    .proj-desc {
-      font-size: .9rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
-    .proj-features { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
-    .proj-features li {
-      font-family: var(--font-mono);
-      font-size: .78rem;
-      color: rgba(232,234,240,.6);
-      display: flex; align-items: center; gap: .6rem;
-    }
-    .proj-features li::before {
-      content: '▸';
-      color: var(--p-accent, var(--accent));
-      font-size: .7rem;
-    }
-    .proj-footer {
-      padding: 1.2rem 2rem;
-      border-top: 1px solid var(--border);
-      display: flex; gap: .6rem; flex-wrap: wrap;
-    }
-
-    
-
-
-
-
-
-
-
-    /* ═══════════════════════════════════════════════════════════════
-CONTACT PRO
-════════════════════════════════════════════════════════════════ */
- 
-.contact-pro {
-  max-width: 980px;
-  margin: 0 auto;
-  text-align: center;
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Said Ojeda · Desarrollador</title>
+<meta name="description" content="Said Ojeda, desarrollador y estudiante de Ingeniería en Sistemas en Guatemala. Convierto procesos de oficina en sistemas web, Power Apps y automatizaciones.">
+<meta property="og:title" content="Said Ojeda · Desarrollador">
+<meta property="og:description" content="Convierto el papeleo de una oficina en sistemas que se hacen solos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F4F7FB;
+  --hoja:#FFFFFF;
+  --tinta:#14213D;
+  --tinta-suave:#4A5672;
+  --cielo:#3E8ED0;
+  --cielo-claro:#DCEBF8;
+  --sol:#FFC93C;
+  --sol-claro:#FFF1C7;
+  --linea:#D6DEEA;
+  --sombra:0 1px 2px rgba(20,33,61,.06),0 12px 32px -12px rgba(20,33,61,.18);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --texto:"Instrument Sans",system-ui,sans-serif;
 }
- 
-.contact-pro .s-header {
-  margin-bottom: 1.2rem;
-}
- 
-.contact-big {
-  max-width: 820px;
-  margin: 0 auto 2.8rem;
-  color: var(--text-soft);
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  line-height: 1.8;
-}
- 
-.contact-big strong {
-  color: var(--text);
-  font-weight: 800;
-}
- 
-.contact-grid-pro {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
-  gap: 1.2rem;
-  margin-top: 2rem;
-}
- 
-.contact-tile {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 178px;
-  padding: 2rem 1.4rem;
-  border-radius: 24px;
-  text-decoration: none;
-  color: var(--text);
-  background:
-    linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.025)),
-    rgba(15, 20, 35, .72);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow:
-    0 18px 45px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.04);
-  transition:
-    transform .28s ease,
-    border-color .28s ease,
-    box-shadow .28s ease,
-    background .28s ease;
-}
- 
-.contact-tile::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  z-index: -2;
-  opacity: 0;
-  transition: opacity .3s ease;
-  background: radial-gradient(circle at 50% 0%, var(--tile-color), transparent 62%);
-}
- 
-.contact-tile::after {
-  content: "";
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  right: -45px;
-  bottom: -45px;
-  border-radius: 50%;
-  background: var(--tile-color);
-  filter: blur(45px);
-  opacity: .08;
-  transition: opacity .3s ease, transform .3s ease;
-  z-index: -1;
-}
- 
-.contact-tile:hover {
-  transform: translateY(-8px) scale(1.015);
-  border-color: var(--tile-color);
-  box-shadow:
-    0 24px 70px rgba(0,0,0,.34),
-    0 0 35px color-mix(in srgb, var(--tile-color) 35%, transparent);
-}
- 
-.contact-tile:hover::before {
-  opacity: .16;
-}
- 
-.contact-tile:hover::after {
-  opacity: .23;
-  transform: scale(1.2);
-}
- 
-.contact-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1rem;
-  border-radius: 20px;
-  display: grid;
-  place-items: center;
-  font-size: 2.25rem;
-  color: #fff;
-  background: rgba(255,255,255,.055);
-  border: 1px solid rgba(255,255,255,.09);
-  transition: transform .28s ease, color .28s ease, background .28s ease;
-}
- 
-.contact-tile:hover .contact-icon {
-  transform: translateY(-4px) scale(1.07);
-  color: var(--tile-color);
-  background: rgba(255,255,255,.08);
-}
- 
-.contact-title {
-  font-size: 1.1rem;
-  font-weight: 900;
-  margin-bottom: .45rem;
-  letter-spacing: -.02em;
-}
- 
-.contact-value {
-  font-size: .92rem;
-  color: var(--text-soft);
-  font-weight: 600;
-  word-break: break-word;
-}
- 
-.contact-action {
-  display: inline-flex;
-  margin-top: 1rem;
-  font-size: .72rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--tile-color);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .25s ease, transform .25s ease;
-}
- 
-.contact-tile:hover .contact-action {
-  opacity: 1;
-  transform: translateY(0);
-}
- 
-.contact-tile.whatsapp {
-  --tile-color: #22c55e;
-}
- 
-.contact-tile.github {
-  --tile-color: #a78bfa;
-}
- 
-.contact-tile.mail {
-  --tile-color: #38bdf8;
-}
- 
-.contact-tile.instagram {
-  --tile-color: #f472b6;
-}
- 
-.contact-tile.instagram {
-  grid-column: span 1;
-}
- 
-.contact-info-panel {
-  margin: 1.3rem auto 0;
-  padding: 1rem;
-  border-radius: 24px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: .85rem;
-  background:
-    linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.018)),
-    rgba(15, 20, 35, .52);
-  border: 1px solid rgba(255,255,255,.07);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-}
- 
-.ci-pro-item {
-  display: flex;
-  align-items: center;
-  gap: .8rem;
-  text-align: left;
-  padding: 1rem;
-  border-radius: 18px;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.055);
-}
- 
-.ci-pro-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  background: rgba(255,255,255,.06);
-  color: var(--accent);
-  font-size: 1rem;
-}
- 
-.ci-pro-label {
-  display: block;
-  color: var(--text-soft);
-  font-size: .68rem;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  margin-bottom: .25rem;
-  font-weight: 800;
-}
- 
-.ci-pro-item strong {
-  display: block;
-  color: var(--text);
-  font-size: .82rem;
-  line-height: 1.35;
-}
- 
-.ci-pro-item.available .ci-pro-icon,
-.ci-pro-item.available strong {
-  color: #22c55e;
-}
- 
-/* Responsive */
-@media (max-width: 980px) {
-  .contact-grid-pro {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
-  }
- 
-  .contact-info-panel {
-    grid-template-columns: repeat(2, 1fr);
+@media (prefers-color-scheme:dark){
+  :root{
+    --papel:#0F1830;
+    --hoja:#17223F;
+    --tinta:#EEF3FA;
+    --tinta-suave:#A9B6CF;
+    --cielo:#6CB0E8;
+    --cielo-claro:#1D3358;
+    --sol:#FFD15C;
+    --sol-claro:#3A3216;
+    --linea:#2A3858;
+    --sombra:0 1px 2px rgba(0,0,0,.3),0 16px 40px -16px rgba(0,0,0,.6);
   }
 }
- 
-@media (max-width: 620px) {
-  .contact-grid-pro {
-    grid-template-columns: 1fr;
-  }
- 
-  .contact-info-panel {
-    grid-template-columns: 1fr;
-  }
- 
-  .contact-tile {
-    min-height: 160px;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--papel);color:var(--tinta);
+  font:400 1.0625rem/1.6 var(--texto);
+  -webkit-font-smoothing:antialiased;
 }
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cielo);outline-offset:3px;border-radius:4px}
+.envoltura{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--display);line-height:1.08;letter-spacing:-.02em}
 
+/* barra */
+.barra{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--papel) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
+.barra .envoltura{display:flex;align-items:center;justify-content:space-between;height:64px}
+.marca{font-family:var(--display);font-weight:800;font-size:1.25rem;text-decoration:none}
+.marca span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sol);margin-left:4px;vertical-align:middle}
+.barra nav{display:flex;gap:22px}
+.barra nav a{text-decoration:none;color:var(--tinta-suave);font-weight:500;font-size:.95rem}
+.barra nav a:hover{color:var(--tinta)}
 
+/* portada */
+.portada{padding:72px 0 88px}
+.portada .envoltura{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+.saludo{color:var(--tinta-suave);font-weight:500;margin-bottom:14px}
+.portada h1{font-size:clamp(2.4rem,5.4vw,4.1rem);font-weight:800;margin-bottom:22px;max-width:14ch}
+.portada p.intro{font-size:1.15rem;color:var(--tinta-suave);max-width:46ch;margin-bottom:30px}
+.acciones{display:flex;flex-wrap:wrap;gap:12px}
+.boton{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid var(--tinta);transition:transform .15s}
+.boton:hover{transform:translateY(-2px)}
+.boton.lleno{background:var(--tinta);color:var(--papel)}
+.boton svg{width:18px;height:18px}
+.datos{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:34px;color:var(--tinta-suave);font-size:.95rem}
+.datos b{color:var(--tinta);font-weight:600}
 
+/* la hoja de tramite */
+.hoja{position:relative;background:var(--hoja);border:1px solid var(--linea);border-radius:6px;box-shadow:var(--sombra);padding:34px 34px 96px;transform:rotate(1.2deg)}
+.hoja::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:repeating-linear-gradient(90deg,var(--cielo) 0 24%,transparent 24% 26%,var(--sol) 26% 50%,transparent 50% 52%);border-radius:6px 6px 0 0;opacity:.9}
+.hoja-titulo{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--tinta);padding-bottom:10px;margin-bottom:16px}
+.hoja-titulo h2{font-size:1.15rem}
+.correlativo{font-family:var(--display);font-weight:700;color:var(--cielo);font-size:.95rem}
+.campo{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:11px 0;border-bottom:1px dashed var(--linea);font-size:.98rem}
+.campo dt{color:var(--tinta-suave)}
+.campo dd{font-weight:500}
+.hoja .nota{margin-top:16px;font-size:.92rem;color:var(--tinta-suave)}
+.sello{position:absolute;right:28px;bottom:24px;border:3px solid var(--cielo);color:var(--cielo);border-radius:10px;padding:6px 14px;font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:.06em;transform:rotate(-12deg);background:color-mix(in srgb,var(--hoja) 70%,transparent);animation:sellar .55s cubic-bezier(.2,1.6,.4,1) .5s both}
+.sello small{display:block;font-size:.62rem;letter-spacing:.04em;font-weight:700;text-align:center}
+@keyframes sellar{0%{opacity:0;transform:rotate(-12deg) scale(2.2)}100%{opacity:1;transform:rotate(-12deg) scale(1)}}
 
+/* secciones */
+section{padding:84px 0}
+.cabeza{max-width:640px;margin-bottom:44px}
+.cabeza h2{font-size:clamp(2rem,3.8vw,2.8rem);margin-bottom:12px}
+.cabeza p{color:var(--tinta-suave);font-size:1.08rem}
 
+/* proyecto estrella */
+.estrella{background:var(--hoja);border:1px solid var(--linea);border-radius:20px;box-shadow:var(--sombra);display:grid;grid-template-columns:1.15fr .85fr;overflow:hidden;margin-bottom:28px}
+.estrella-texto{padding:38px}
+.tipo{display:inline-block;font-size:.85rem;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--cielo-claro);color:var(--tinta);margin-bottom:14px}
+.tipo.sol{background:var(--sol-claro)}
+.estrella h3{font-size:clamp(1.6rem,3vw,2.15rem);margin-bottom:12px}
+.estrella-texto>p{color:var(--tinta-suave);margin-bottom:20px;max-width:56ch}
+.lista{list-style:none;display:grid;gap:8px;margin-bottom:22px}
+.lista li{padding-left:22px;position:relative}
+.lista li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:10px;border-radius:3px;background:var(--sol)}
+.stack{display:flex;flex-wrap:wrap;gap:6px}
+.stack span{font-size:.82rem;font-weight:500;border:1px solid var(--linea);border-radius:6px;padding:3px 9px;color:var(--tinta-suave)}
 
+.ponderada{background:var(--cielo-claro);padding:34px 30px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.ponderada h4{font-family:var(--display);font-size:1.15rem}
+.ponderada p{font-size:.95rem;color:var(--tinta-suave)}
+.comparacion{display:grid;gap:16px}
+.fila-barra{display:grid;gap:6px}
+.fila-barra .etq{display:flex;justify-content:space-between;font-size:.9rem;font-weight:600}
+.pista{height:14px;background:color-mix(in srgb,var(--hoja) 70%,transparent);border-radius:99px;overflow:hidden}
+.pista i{display:block;height:100%;border-radius:99px;background:var(--tinta);width:var(--w);transition:width .6s ease}
+.pista i.peso{background:var(--cielo)}
+.selector{display:flex;gap:6px;background:var(--hoja);border-radius:999px;padding:4px;width:max-content}
+.selector button{border:0;background:transparent;font:600 .9rem var(--texto);color:var(--tinta-suave);padding:7px 14px;border-radius:999px;cursor:pointer}
+.selector button[aria-pressed="true"]{background:var(--tinta);color:var(--papel)}
 
+/* otros proyectos */
+.proyectos{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.proyecto{background:var(--hoja);border:1px solid var(--linea);border-radius:16px;padding:28px}
+.proyecto h3{font-size:1.4rem;margin-bottom:8px}
+.proyecto>p{color:var(--tinta-suave);margin-bottom:16px}
+details{margin-bottom:16px}
+summary{cursor:pointer;font-weight:600;color:var(--cielo);list-style:none;display:inline-flex;align-items:center;gap:6px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.2rem;line-height:1;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details .lista{margin:14px 0 0}
+.proyecto.abierto{border-style:dashed}
+.proyecto.abierto a{font-weight:600;color:var(--cielo)}
 
+/* habilidades */
+.cajas{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.caja h3{font-size:1.2rem;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.caja h3::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c,var(--cielo))}
+.caja p{color:var(--tinta-suave);font-size:.98rem;margin-bottom:12px}
 
+/* trayectoria */
+.linea-tiempo{list-style:none;border-left:3px solid var(--linea);margin-left:8px;display:grid;gap:30px;max-width:720px}
+.linea-tiempo li{position:relative;padding-left:28px}
+.linea-tiempo li::before{content:"";position:absolute;left:-10px;top:6px;width:17px;height:17px;border-radius:50%;background:var(--papel);border:3px solid var(--cielo)}
+.linea-tiempo li:last-child::before{background:var(--sol);border-color:var(--sol)}
+.anio{font-family:var(--display);font-weight:700;color:var(--cielo)}
+.linea-tiempo h3{font-size:1.2rem;margin:2px 0 4px}
+.linea-tiempo p{color:var(--tinta-suave)}
 
+/* contacto */
+.contacto{background:var(--tinta);color:var(--papel);border-radius:28px;padding:56px 44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.contacto h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:14px}
+.contacto p{opacity:.8;max-width:42ch}
+.canales{display:grid;gap:10px}
+.canal{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;padding:16px 20px;border-radius:14px;background:color-mix(in srgb,var(--papel) 9%,transparent);transition:background .15s}
+.canal:hover{background:color-mix(in srgb,var(--papel) 16%,transparent)}
+.canal b{font-weight:600}
+.canal span{opacity:.75;font-size:.95rem}
+.canal.principal{background:var(--sol);color:#14213D}
+.canal.principal span{opacity:.85}
+@media (prefers-color-scheme:dark){.contacto{background:var(--hoja);border:1px solid var(--linea)}}
 
+footer{padding:40px 0 56px;color:var(--tinta-suave);font-size:.92rem}
+footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /* ─── INLINE ICONS FALLBACK ───────────────────────────────────── */
-    .nav-ico {
-      display: inline-grid;
-      place-items: center;
-      width: 1.05em;
-      height: 1.05em;
-      font-size: .95rem;
-      line-height: 1;
-    }
-    .contact-svg {
-      width: 34px;
-      height: 34px;
-      display: block;
-      fill: currentColor;
-    }
-    .contact-icon svg {
-      filter: drop-shadow(0 0 12px rgba(255,255,255,.08));
-    }
-
-    /* ─── RESPONSIVE & CONTACT FIXES ─────────────────────────────── */
-    .contact-tile .contact-icon i { display: inline-block; line-height: 1; }
-    .contact-tile.instagram { grid-column: 2 / 3; }
-
-    @media (max-width: 980px) {
-      .contact-tile.instagram { grid-column: auto; }
-    }
-
-    @media (max-width: 760px) {
-      body { padding-bottom: 82px; }
-      nav {
-        top: auto;
-        bottom: 12px;
-        left: 12px;
-        right: 12px;
-        padding: .55rem;
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        background: rgba(10,14,28,.86);
-        box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-        justify-content: center;
-      }
-      .nav-logo, .nav-dot { display: none; }
-      .nav-links {
-        display: grid !important;
-        grid-template-columns: repeat(5, 1fr);
-        width: 100%;
-        gap: .25rem;
-      }
-      .nav-links li { list-style: none; min-width: 0; }
-      .nav-links li a {
-        width: 100%;
-        justify-content: center;
-        flex-direction: column;
-        gap: .25rem;
-        padding: .55rem .25rem;
-        border-radius: 16px;
-        font-size: .58rem;
-        letter-spacing: .02em;
-        text-transform: none;
-        white-space: nowrap;
-      }
-      .nav-links li a i { font-size: .95rem; }
-      .nav-links li a::after { display: none; }
-      .nav-links li a.active {
-        color: #fff;
-        background: linear-gradient(135deg, rgba(0,240,200,.22), rgba(123,92,255,.18));
-        box-shadow: 0 0 18px rgba(0,240,200,.12);
-      }
-      .section { padding: 72px 1rem 3.5rem; }
-      #hero { padding-left: 1rem; padding-right: 1rem; }
-      .hero-cta { width: 100%; }
-      .hero-cta .btn { flex: 1 1 170px; justify-content: center; }
-      .projects-grid, .skills-grid { grid-template-columns: 1fr; }
-      .proj-card, .skill-card, .stat-card, .contact-tile { border-radius: 18px; }
-      .contact-pro { max-width: 100%; }
-      .contact-big { margin-bottom: 1.8rem; }
-      .contact-grid-pro { gap: 1rem; margin-top: 1.3rem; }
-      .contact-info-panel { margin-top: 1rem; }
-    }
-
-    @media (max-width: 520px) {
-      .nav-links li a span { font-size: .52rem; }
-      .s-header { margin-bottom: 2rem; }
-      .hero-name { font-size: clamp(3.1rem, 18vw, 4.7rem); }
-      .hero-subtitle { font-size: .92rem; margin-bottom: 2rem; }
-      .about-stats { grid-template-columns: 1fr 1fr; gap: .85rem; }
-      .stat-card { padding: 1rem; }
-      .stat-num { font-size: 1.9rem; }
-      .stat-label { font-size: .58rem; }
-      .proj-header, .proj-body, .proj-footer { padding-left: 1.15rem; padding-right: 1.15rem; }
-      .proj-features li { font-size: .72rem; align-items: flex-start; }
-      .contact-tile { min-height: 148px; padding: 1.4rem 1rem; }
-      .contact-icon { width: 54px; height: 54px; font-size: 1.85rem; border-radius: 18px; }
-      .contact-title { font-size: 1rem; }
-      .contact-value { font-size: .84rem; }
-      .ci-pro-item { padding: .9rem; }
-      footer { padding-bottom: 7rem; }
-    }
-
-    @media (pointer: coarse) {
-      body { cursor: auto; }
-      #cursor, #cursor-ring { display: none; }
-    }
-
-    /* ─── FOOTER ────────────────────────────────────────────────────── */
-    footer {
-      position: relative; z-index: 2;
-      padding: 2rem 3rem;
-      border-top: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    footer p {
-      font-family: var(--font-mono);
-      font-size: .72rem;
-      color: var(--muted);
-    }
-    footer span { color: var(--accent); }
-
-    /* ─── RESPONSIVE ────────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .section { padding: 100px 1.5rem 3rem; }
-      #hero { padding-left: 1.5rem; }
-      .hero-floats { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      footer { flex-direction: column; gap: 1rem; text-align: center; }
-    }
-    @media (max-width: 600px) {
-      .hero-name { font-size: clamp(3rem, 14vw, 5rem); } 
-    }
-
-    /* ─── UTILITIES ─────────────────────────────────────────────────── */
-    .animate__animated { --animate-duration: .6s; }
-    .d1 { animation-delay: .05s; }
-    .d2 { animation-delay: .15s; }
-    .d3 { animation-delay: .25s; }
-    .d4 { animation-delay: .35s; }
-    .d5 { animation-delay: .45s; }
-    .d6 { animation-delay: .55s; }
-    .d7 { animation-delay: .65s; } 
-
-    /* Scanline on hero */
-    .scanline {
-      position: absolute; inset: 0; z-index: 1;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,.08) 2px,
-        rgba(0,0,0,.08) 4px
-      );
-      pointer-events: none;
-    }
-
-
-    /* ─── FINAL MOBILE NAV HOTFIX ─────────────────────────────────── */
-    @media (max-width: 760px) {
-      body { padding-bottom: 86px !important; cursor: auto; }
-      nav {
-        position: fixed !important;
-        top: auto !important;
-        bottom: 12px !important;
-        left: 12px !important;
-        right: 12px !important;
-        padding: .55rem !important;
-        border: 1px solid var(--border) !important;
-        border-radius: 24px !important;
-        background: rgba(10,14,28,.88) !important;
-        backdrop-filter: blur(24px) !important;
-        box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06) !important;
-        justify-content: center !important;
-      }
-      .nav-logo, .nav-dot { display: none !important; }
-      .nav-links {
-        display: grid !important;
-        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
-        width: 100% !important;
-        gap: .25rem !important;
-        list-style: none !important;
-      }
-      .nav-links li a {
-        width: 100% !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        flex-direction: column !important;
-        gap: .24rem !important;
-        padding: .55rem .2rem !important;
-        border-radius: 16px !important;
-        font-size: .56rem !important;
-        letter-spacing: .01em !important;
-        text-transform: none !important;
-      }
-      .nav-links li a i { font-size: .95rem !important; }
-      .nav-links li a::after { display: none !important; }
-      .nav-links li a.active {
-        color: #fff !important;
-        background: linear-gradient(135deg, rgba(0,240,200,.22), rgba(123,92,255,.18)) !important;
-        box-shadow: 0 0 18px rgba(0,240,200,.13) !important;
-      }
-      .section { padding-top: 72px !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-      footer { padding-bottom: 7rem !important; }
-      #cursor, #cursor-ring { display: none !important; }
-    }
-
-    @media (max-width: 520px) {
-      .contact-grid-pro, .skills-grid, .projects-grid { grid-template-columns: 1fr !important; }
-      .contact-info-panel { grid-template-columns: 1fr !important; }
-      .contact-tile.instagram { grid-column: auto !important; }
-    }
-
-  </style>
+@media (max-width:900px){
+  .portada .envoltura,.estrella,.contacto{grid-template-columns:1fr}
+  .cajas{grid-template-columns:1fr 1fr}
+  .proyectos{grid-template-columns:1fr}
+  .hoja{transform:none;max-width:480px}
+}
+@media (max-width:620px){
+  .barra nav{display:none}
+  .portada{padding:44px 0 64px}
+  section{padding:64px 0}
+  .cajas{grid-template-columns:1fr}
+  .estrella-texto,.ponderada{padding:26px 22px}
+  .contacto{padding:36px 22px;border-radius:20px}
+  .hoja{padding:26px 20px 90px}
+  .sello{right:18px;bottom:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
 </head>
 <body>
 
-  <!-- Custom Cursor -->
-  <div id="cursor"></div>
-  <div id="cursor-ring"></div>
+<header class="barra">
+  <div class="envoltura">
+    <a class="marca" href="#inicio" aria-label="Inicio">Said<span></span></a>
+    <nav aria-label="Secciones">
+      <a href="#proyectos">Proyectos</a>
+      <a href="#habilidades">Habilidades</a>
+      <a href="#trayectoria">Trayectoria</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
 
-  <!-- Ambient -->
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
-  <div class="blob blob-3"></div>
-  <div class="grid-bg"></div>
-
-  <!-- ─── NAV ──────────────────────────────────────────────────────── -->
-  <nav>
-    <div class="nav-logo">Said<span>.</span></div>
-    <ul class="nav-links">
-      <li><a href="#" class="active" data-section="hero" aria-label="Ir a inicio"><span class="nav-ico">⌂</span><span>Inicio</span></a></li>
-      <li><a href="#" data-section="about" aria-label="Ir a sobre mí"><span class="nav-ico">●</span><span>Sobre Mí</span></a></li>
-      <li><a href="#" data-section="skills" aria-label="Ir a habilidades"><span class="nav-ico">&lt;/&gt;</span><span>Skills</span></a></li>
-      <li><a href="#" data-section="projects" aria-label="Ir a proyectos"><span class="nav-ico">▣</span><span>Proyectos</span></a></li>
-      <li><a href="#" data-section="contact" aria-label="Ir a contacto"><span class="nav-ico">➤</span><span>Contacto</span></a></li>
-    </ul>
-    <div class="nav-dot"></div>
-  </nav>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       HERO
-  ════════════════════════════════════════════════════════════════ -->
-  <section id="hero" class="section active">
-    <div class="scanline"></div>
-
-    <div class="hero-tag animate__animated animate__fadeInDown d1">
-      Desarrollador Web & Automatización
-    </div>
-
-    <h1 class="hero-name animate__animated animate__fadeInUp d2">
-      <span class="line-1">Said</span>
-      <span class="line-2">Ojeda.</span>
-    </h1>
-
-    <p class="hero-subtitle animate__animated animate__fadeInUp d3">
-      22 años · <span class="hl">Ciudad de Guatemala</span><br/>
-      Interfaces fluidas · Lógicas complejas · Rendimiento al límite.
-    </p>
-
-    <div class="hero-cta animate__animated animate__fadeInUp d4">
-      <button class="btn btn-primary" data-goto="projects">Ver Proyectos ▸</button>
-      <button class="btn btn-ghost" data-goto="contact">Contacto</button>
-    </div>
-
-    <div class="hero-scroll animate__animated animate__fadeIn d7">Scroll</div>
-
-    <div class="hero-floats animate__animated animate__fadeInRight d5">
-      <div class="float-card">
-        <div class="fc-label">Ubicación</div>
-        <div class="fc-val">🇬🇹 Guatemala</div>
+<main id="inicio">
+  <section class="portada">
+    <div class="envoltura">
+      <div>
+        <p class="saludo">Hola, soy Said Ojeda 👋</p>
+        <h1>Agarro el papeleo de una oficina y lo vuelvo un sistema.</h1>
+        <p class="intro">Desarrollo sistemas web, Power Apps y automatizaciones para que la gente deje de llevar el control en cuadernos, correos y hojas de Excel. Estudio Ingeniería en Sistemas y trabajo como desarrollador al mismo tiempo.</p>
+        <div class="acciones">
+          <a class="boton lleno" href="#proyectos">Ver mis proyectos</a>
+          <a class="boton" href="https://wa.me/50237808239?text=Hola%20Said,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20platicar." target="_blank" rel="noopener">Escribirme por WhatsApp</a>
+        </div>
+        <p class="datos"><span><b>22 años</b></span><span>Ciudad de Guatemala</span><span>6to semestre en la <b>UMG</b></span></p>
       </div>
-      <div class="float-card">
-        <div class="fc-label">Universidad</div>
-        <div class="fc-val fc-accent">UMG</div>
+
+      <article class="hoja" aria-label="Hoja de trámite de presentación">
+        <div class="hoja-titulo">
+          <h2>Hoja de trámite</h2>
+          <span class="correlativo">SO-0001-2026</span>
+        </div>
+        <dl>
+          <div class="campo"><dt>Para</dt><dd>Quien esté leyendo esto</dd></div>
+          <div class="campo"><dt>De</dt><dd>Said Ojeda, desarrollador</dd></div>
+          <div class="campo"><dt>Asunto</dt><dd>Procesos que se hacen solos</dd></div>
+          <div class="campo"><dt>Estado</dt><dd>Disponible para proyectos</dd></div>
+        </dl>
+        <p class="nota">Así se ven los documentos que genera mi sistema de correspondencia, solo que esos llevan firma de verdad.</p>
+        <div class="sello" aria-hidden="true">APROBADO<small>con buena vibra</small></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="proyectos">
+    <div class="envoltura">
+      <div class="cabeza">
+        <h2>Lo que he construido</h2>
+        <p>Casi todo nació de un problema real de alguien que tenía que hacer lo mismo a mano todos los días.</p>
       </div>
-      <div class="float-card">
-        <div class="fc-label">Estado</div>
-        <div class="fc-val">Disponible ✦</div>
+
+      <article class="estrella">
+        <div class="estrella-texto">
+          <span class="tipo">Sistema web · el favorito</span>
+          <h3>Sistema de Correspondencia</h3>
+          <p>Empezó para registrar los documentos que entran a un área de Reclutamiento y Selección. Hoy es donde el equipo reparte el trabajo, genera sus documentos y ve quién está saturado.</p>
+          <ul class="lista">
+            <li>Cada documento con su PDF, número de tarea y responsable, y aviso por correo al asignarlo.</li>
+            <li>Correlativos automáticos para oficios y memos de varias áreas.</li>
+            <li>Hojas de trámite en Word generadas con un clic.</li>
+            <li>Dashboard de cargas laborales con carga ponderada.</li>
+            <li>Roles, bitácora de acciones e importación desde CSV.</li>
+          </ul>
+          <div class="stack"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Chart.js</span><span>Power Automate</span></div>
+        </div>
+        <div class="ponderada">
+          <div>
+            <h4>¿Quién tiene más trabajo?</h4>
+            <p>Contar filas engaña. La carga ponderada le da peso a cada plaza según su fase, su estado y sus atrasos.</p>
+          </div>
+          <div class="selector" role="group" aria-label="Forma de medir">
+            <button type="button" aria-pressed="false" data-modo="conteo">Contar plazas</button>
+            <button type="button" aria-pressed="true" data-modo="peso">Carga ponderada</button>
+          </div>
+          <div class="comparacion">
+            <div class="fila-barra">
+              <div class="etq"><span>Profesional A</span><span data-a>5.7 pts</span></div>
+              <div class="pista"><i class="peso" data-barra-a style="--w:39%"></i></div>
+            </div>
+            <div class="fila-barra">
+              <div class="etq"><span>Profesional B</span><span data-b>14.7 pts</span></div>
+              <div class="pista"><i class="peso" data-barra-b style="--w:100%"></i></div>
+            </div>
+          </div>
+          <p data-explica>Los dos tienen 3 plazas, pero las de B están en fases pesadas y con atrasos.</p>
+        </div>
+      </article>
+
+      <div class="proyectos">
+        <article class="proyecto">
+          <span class="tipo sol">Power App</span>
+          <h3>Quiniela del Mundial 2026</h3>
+          <p>Toda la institución dejó sus pronósticos en una app con puntos automáticos y ranking en vivo, en vez de hojas de Excel dando vueltas por correo.</p>
+          <details>
+            <summary>Ver qué hace</summary>
+            <ul class="lista">
+              <li>Pronósticos por usuario y validación de resultados.</li>
+              <li>Puntos calculados solos y ranking en tiempo real.</li>
+              <li>Filtros por grupo, fase y partidos terminados.</li>
+              <li>Resultados automatizados con Power Automate.</li>
+            </ul>
+          </details>
+          <div class="stack"><span>Power Apps</span><span>Power Fx</span><span>SharePoint</span><span>Power Automate</span></div>
+        </article>
+
+        <article class="proyecto">
+          <span class="tipo sol">Power App</span>
+          <h3>Registro masivo con QR</h3>
+          <p>Una app que registra participantes y le genera a cada uno su código QR, y otra que los escanea para validar al instante.</p>
+          <details>
+            <summary>Ver qué hace</summary>
+            <ul class="lista">
+              <li>Registro masivo con validación antes de guardar.</li>
+              <li>QR único por persona.</li>
+              <li>Consulta y validación con la cámara del cel.</li>
+              <li>Datos en SharePoint y Excel Online.</li>
+            </ul>
+          </details>
+          <div class="stack"><span>Power Apps</span><span>SharePoint</span><span>Power Automate</span><span>Office 365</span></div>
+        </article>
+
+        <article class="proyecto">
+          <span class="tipo">Herramienta web</span>
+          <h3>DRSP-CONVERT</h3>
+          <p>Una caja de herramientas para PDFs en la oficina: comprimir, unir, separar, reordenar y convertir, todo desde el navegador.</p>
+          <details>
+            <summary>Ver qué hace</summary>
+            <ul class="lista">
+              <li>Comprime PDFs con distintos niveles de calidad.</li>
+              <li>Une, separa y reordena páginas arrastrándolas.</li>
+              <li>Convierte imágenes a PDF y PDF a Word o Excel.</li>
+              <li>Vista previa con miniaturas y modo oscuro.</li>
+            </ul>
+          </details>
+          <div class="stack"><span>JavaScript</span><span>PDF.js</span><span>PDF-Lib</span><span>Tailwind</span></div>
+        </article>
+
+        <article class="proyecto">
+          <span class="tipo">Sistema web</span>
+          <h3>Gestión eclesiástica</h3>
+          <p>Para que una iglesia lleve en un solo lugar sus miembros, áreas de servicio, clases de doctrina, notas y asistencias.</p>
+          <details>
+            <summary>Ver qué hace</summary>
+            <ul class="lista">
+              <li>Miembros con foto y expediente individual.</li>
+              <li>Períodos de doctrina con notas, asistencias y promociones.</li>
+              <li>Reportes en PDF y bitácora de acciones.</li>
+              <li>Permisos por rol.</li>
+            </ul>
+          </details>
+          <div class="stack"><span>PHP</span><span>PDO</span><span>MySQL</span><span>Dompdf</span><span>DataTables</span></div>
+        </article>
+
+        <article class="proyecto">
+          <span class="tipo">Sistema web</span>
+          <h3>Gestión escolar</h3>
+          <p>Alumnos, docentes, cursos, horarios, notas y asistencia, con un acceso distinto para cada rol.</p>
+          <div class="stack"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Bootstrap</span></div>
+        </article>
+
+        <article class="proyecto">
+          <span class="tipo sol">Excel VBA</span>
+          <h3>Banco de candidatos y reportes</h3>
+          <p>Antes de los sistemas web, Excel. Login por usuario, formularios propios y reportes con filtros en cascada que se exportan solos.</p>
+          <div class="stack"><span>VBA</span><span>UserForms</span><span>Macros</span></div>
+        </article>
+
+        <article class="proyecto abierto">
+          <span class="tipo">Código abierto</span>
+          <h3>coldfusion8-recetas</h3>
+          <p>Soluciones que me funcionaron en ColdFusion 8, como justificar texto en PDF o traer textos largos por DSN. Las publico para que nadie más pierda horas en lo mismo.</p>
+          <p><a href="https://github.com/Said1Ojeda/coldfusion8-recetas" target="_blank" rel="noopener">Ver el repo en GitHub</a></p>
+        </article>
+
+        <article class="proyecto abierto">
+          <span class="tipo">En la U</span>
+          <h3>Proyectos de clase</h3>
+          <p>Una app de métodos numéricos, un sistema en C# con arquitectura por capas y estructuras de datos como árboles y grafos.</p>
+          <p><a href="https://github.com/Said1Ojeda" target="_blank" rel="noopener">Ver todos en GitHub</a></p>
+        </article>
       </div>
     </div>
   </section>
 
- 
-
-
-
-
-
-
-  <!-- ═══════════════════════════════════════════════════════════════
-ABOUT
-════════════════════════════════════════════════════════════════ -->
-<section id="about" class="section">
-  <div class="s-header animate__animated animate__fadeInDown">
-    <div class="s-tag">Bio</div>
-    <h2 class="s-title">Sobre <span class="g">Mí</span></h2>
-  </div>
- 
-  <div class="about-grid">
- 
-    <div class="about-text animate__animated animate__fadeInLeft d1">
-      <p>
-        Tengo <strong>22 años</strong> y estudio <strong>Ingeniería en Sistemas</strong> en la
-        <strong>Universidad Mariano Gálvez de Guatemala</strong>. Me estoy formando como
-        desarrollador full stack, con enfoque en la creación de sistemas reales, automatización
-        de procesos, bases de datos y soluciones administrativas que resuelven necesidades concretas.
-      </p>
- 
-      <p>
-        Mi experiencia práctica se ha construido desarrollando proyectos funcionales como sistemas
-        de <strong>correspondencia</strong>, gestión eclesiástica, registro masivo con códigos QR,
-        quinielas empresariales, plataformas académicas, automatizaciones en Excel VBA y herramientas
-        web para conversión y gestión documental.
-      </p>
- 
-      <p>
-        Me gusta construir soluciones completas: desde la interfaz visual hasta la lógica interna,
-        la base de datos, los permisos, los reportes y la experiencia del usuario. No me quedo solo
-        con que algo funcione; busco que sea ordenado, escalable, seguro y útil para quien realmente
-        lo va a utilizar.
-      </p>
- 
-      <p>
-        Además de la programación, tengo bases en <strong>matemática aplicada</strong>,
-        <strong>lógica</strong>, <strong>Flujos</strong> y análisis de procesos, lo que me
-        permite entender mejor los problemas, organizar información y convertir ideas en sistemas
-        funcionales con valor real.
-      </p>
- 
-      <div class="timeline" style="margin-top:2.5rem">
- 
-        <div class="tl-item">
-          <div class="tl-dot">🎓</div>
-          <div class="tl-content">
-            <div class="tl-year">2024 </div>
-            <div class="tl-title">Universidad Mariano Gálvez</div>
-            <div class="tl-desc">
-              Formación en Ingeniería en Sistemas, programación, bases de datos, estructuras de datos,
-              métodos numéricos, redes y desarrollo de soluciones tecnológicas.
-            </div>
-          </div>
+  <section id="habilidades">
+    <div class="envoltura">
+      <div class="cabeza">
+        <h2>Con qué trabajo</h2>
+        <p>Uso la herramienta que le queda al problema, aunque sea un ColdFusion de 2008.</p>
+      </div>
+      <div class="cajas">
+        <div class="caja">
+          <h3>Sistemas web</h3>
+          <p>De la pantalla a la base de datos, con sesiones, roles, permisos y reportes.</p>
+          <div class="stack"><span>PHP</span><span>ColdFusion</span><span>JavaScript</span><span>HTML/CSS</span><span>Bootstrap</span></div>
         </div>
- 
-        <div class="tl-item">
-          <div class="tl-dot">💻</div>
-          <div class="tl-content">
-            <div class="tl-year">2024</div>
-            <div class="tl-title">Primeros Sistemas Web</div>
-            <div class="tl-desc">
-              Desarrollo de plataformas académicas y administrativas con PHP, MySQL, HTML, CSS,
-              JavaScript y autenticación por usuarios.
-            </div>
-          </div>
+        <div class="caja" style="--c:var(--sol)">
+          <h3>Power Platform</h3>
+          <p>Apps y flujos conectados a Microsoft 365, para que todo pase sin abrir un correo.</p>
+          <div class="stack"><span>Power Apps</span><span>Power Automate</span><span>SharePoint</span><span>Power BI</span></div>
         </div>
- 
-        <div class="tl-item">
-          <div class="tl-dot">📊</div>
-          <div class="tl-content">
-            <div class="tl-year">2025</div>
-            <div class="tl-title">Automatización y Reportería</div>
-            <div class="tl-desc">
-              Creación de herramientas en Excel VBA, macros avanzadas, formularios personalizados,
-              reportes dinámicos y procesos automatizados para gestión de información.
-            </div>
-          </div>
+        <div class="caja">
+          <h3>Datos</h3>
+          <p>Modelo bases relacionales, armo consultas y saco dashboards que se entiendan.</p>
+          <div class="stack"><span>MySQL</span><span>SQL Server</span><span>Chart.js</span><span>Excel</span></div>
         </div>
- 
-        <div class="tl-item">
-          <div class="tl-dot">🚀</div>
-          <div class="tl-content">
-            <div class="tl-year">2026 — Presente</div>
-            <div class="tl-title">Sistemas Institucionales y Power Platform</div>
-            <div class="tl-desc">
-              Desarrollo de sistemas más completos: correspondencia, gestión eclesiástica,
-              registro masivo con QR, quinielas, flujos administrativos, dashboards y soluciones
-              conectadas con Microsoft 365.
-            </div>
-          </div>
+        <div class="caja" style="--c:var(--sol)">
+          <h3>Lo de la U</h3>
+          <p>La base que hace que lo demás salga ordenado y no a puro parche.</p>
+          <div class="stack"><span>C#</span><span>Estructuras de datos</span><span>Métodos numéricos</span><span>Git</span></div>
         </div>
- 
-        <div class="tl-item" style="padding-bottom:0">
-          <div class="tl-dot">⚡</div>
-          <div class="tl-content">
-            <div class="tl-year">Actualidad</div>
-            <div class="tl-title">Enfoque Full Stack</div>
-            <div class="tl-desc">
-              Construcción de soluciones completas con frontend, backend, bases de datos,
-              roles, permisos, reportes, automatización y experiencia de usuario, ahi humildemente.
-            </div>
-          </div>
-        </div>
- 
       </div>
     </div>
- 
-    <div class="animate__animated animate__fadeInRight d2">
-      <div class="about-stats">
- 
-        <div class="stat-card">
-          <div class="stat-num">22</div>
-          <div class="stat-label">Años de edad</div>
-        </div>
- 
-        <div class="stat-card">
-          <div class="stat-num">8+</div>
-          <div class="stat-label">Proyectos desarrollados</div>
-        </div>
- 
-        <div class="stat-card">
-          <div class="stat-num">20+</div>
-          <div class="stat-label">Módulos funcionales</div>
-        </div>
- 
-        <div class="stat-card">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Tecnologías usadas</div>
-        </div>
- 
-        <div class="stat-card">
-          <div class="stat-num">3+</div>
-          <div class="stat-label">Áreas dominadas</div>
-        </div>
- 
-        <div class="stat-card">
-          <div class="stat-num">∞</div>
-          <div class="stat-label">Ganas de crear</div>
-        </div>
- 
+  </section>
+
+  <section id="trayectoria">
+    <div class="envoltura">
+      <div class="cabeza">
+        <h2>Cómo he llegado aquí</h2>
       </div>
+      <ol class="linea-tiempo">
+        <li>
+          <span class="anio">2024</span>
+          <h3>Entro a la UMG y hago mis primeros sistemas</h3>
+          <p>Plataformas académicas y administrativas en PHP y MySQL, con usuarios y sesiones.</p>
+        </li>
+        <li>
+          <span class="anio">2025</span>
+          <h3>Automatizo en Excel</h3>
+          <p>Macros, formularios y reportes que le ahorraron horas a la gente que los usaba.</p>
+        </li>
+        <li>
+          <span class="anio">2026</span>
+          <h3>Sistemas institucionales y Power Platform</h3>
+          <p>El sistema de correspondencia, la quiniela, el registro con QR y las herramientas de PDF.</p>
+        </li>
+        <li>
+          <span class="anio">Ahora</span>
+          <h3>6to semestre y buscando lo siguiente</h3>
+          <p>Mejorando lo que ya existe y con ganas de proyectos nuevos.</p>
+        </li>
+      </ol>
     </div>
- 
-  </div>
-</section>
+  </section>
 
-
-
-
-
-
-
-
- <!-- ═══════════════════════════════════════════════════════════════
-SKILLS
-════════════════════════════════════════════════════════════════ -->
-<section id="skills" class="section">
-  <div class="s-header animate__animated animate__fadeInDown">
-    <div class="s-tag">Stack Técnico</div>
-    <h2 class="s-title">Mis <span class="g">Habilidades</span></h2>
-  </div>
- 
-  <div class="skills-grid">
- 
-    <div class="skill-card red animate__animated animate__fadeInUp d1">
-      <span class="skill-icon">🚀</span>
-      <div class="skill-name">Desarrollo Full Stack</div>
-      <div class="skill-desc">Creación de sistemas completos conectando interfaz, lógica de negocio, base de datos, seguridad y reportes funcionales.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="92"></div></div>
-      <div class="skill-tags">
-        <span class="tag">HTML5</span>
-        <span class="tag">CSS3</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">PHP</span>
-        <span class="tag">MySQL</span>
-      </div>
-    </div>
- 
-    <div class="skill-card animate__animated animate__fadeInUp d2">
-      <span class="skill-icon">🎨</span>
-      <div class="skill-name">Frontend Web & UI</div>
-      <div class="skill-desc">Diseño de interfaces modernas, responsivas y visualmente limpias, enfocadas en experiencia de usuario y navegación clara.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="90"></div></div>
-      <div class="skill-tags">
-        <span class="tag">HTML5</span>
-        <span class="tag">CSS3</span>
-        <span class="tag">Bootstrap</span>
-        <span class="tag">Responsive</span>
-        <span class="tag">UX/UI</span>
-      </div>
-    </div>
- 
-    <div class="skill-card purple animate__animated animate__fadeInUp d3">
-      <span class="skill-icon">⚙️</span>
-      <div class="skill-name">Backend & PHP</div>
-      <div class="skill-desc">Desarrollo de módulos internos, manejo de sesiones, validaciones, controladores, formularios seguros y arquitectura modular.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="88"></div></div>
-      <div class="skill-tags">
-        <span class="tag">PHP</span>
-        <span class="tag">PDO</span>
-        <span class="tag">Sessions</span>
-        <span class="tag">Validaciones</span>
-        <span class="tag">REST</span>
-      </div>
-    </div>
- 
-    <div class="skill-card animate__animated animate__fadeInUp d4">
-      <span class="skill-icon">🗄️</span>
-      <div class="skill-name">Bases de Datos & SQL</div>
-      <div class="skill-desc">Diseño relacional, consultas SQL, llaves foráneas, relaciones entre tablas, reportes, filtros y estructuras de datos administrativas.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="87"></div></div>
-      <div class="skill-tags">
-        <span class="tag">MySQL</span>
-        <span class="tag">SQL</span>
-        <span class="tag">Relaciones</span>
-        <span class="tag">Consultas</span>
-        <span class="tag">Modelado</span>
-      </div>
-    </div>
- 
-    <div class="skill-card purple animate__animated animate__fadeInUp d5">
-      <span class="skill-icon">🔐</span>
-      <div class="skill-name">Seguridad, Roles & Permisos</div>
-      <div class="skill-desc">Implementación de accesos por usuario, permisos granulares, protección de formularios, CSRF, bitácoras y control de acciones sensibles.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="84"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Roles</span>
-        <span class="tag">Permisos</span>
-        <span class="tag">CSRF</span>
-        <span class="tag">Bitácora</span>
-        <span class="tag">Sesiones</span>
-      </div>
-    </div>
- 
-    <div class="skill-card red animate__animated animate__fadeInUp d6">
-      <span class="skill-icon">📊</span>
-      <div class="skill-name">Reportes & Dashboards</div>
-      <div class="skill-desc">Creación de paneles administrativos, reportes dinámicos, filtros avanzados, exportaciones PDF y visualización clara de información.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="89"></div></div>
-      <div class="skill-tags">
-        <span class="tag">PDF</span>
-        <span class="tag">Dompdf</span>
-        <span class="tag">DataTables</span>
-        <span class="tag">Filtros</span>
-        <span class="tag">Dashboards</span>
-      </div>
-    </div>
- 
-    <div class="skill-card animate__animated animate__fadeInUp d1">
-      <span class="skill-icon">📬</span>
-      <div class="skill-name">Sistemas Administrativos</div>
-      <div class="skill-desc">Desarrollo de plataformas para registros, correspondencia, control documental, miembros, notas, asistencias, flujos y procesos internos.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="91"></div></div>
-      <div class="skill-tags">
-        <span class="tag">CRUD</span>
-        <span class="tag">Flujos</span>
-        <span class="tag">Registros</span>
-        <span class="tag">Correspondencia</span>
-        <span class="tag">Gestión</span>
-      </div>
-    </div>
- 
-    <div class="skill-card purple animate__animated animate__fadeInUp d2">
-      <span class="skill-icon">📈</span>
-      <div class="skill-name">Automatización con Excel VBA</div>
-      <div class="skill-desc">Macros avanzadas, formularios personalizados, menús interactivos, logins multiusuario, reportes automáticos y procesos en Excel.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="88"></div></div>
-      <div class="skill-tags">
-        <span class="tag">VBA</span>
-        <span class="tag">Excel</span>
-        <span class="tag">Macros</span>
-        <span class="tag">UserForms</span>
-        <span class="tag">Reportes</span>
-      </div>
-    </div>
- 
-    <div class="skill-card red animate__animated animate__fadeInUp d3">
-      <span class="skill-icon">⚡</span>
-      <div class="skill-name">Microsoft Power Platform</div>
-      <div class="skill-desc">Creación de aplicaciones empresariales, quinielas, rankings, automatizaciones, listas conectadas y flujos con herramientas Microsoft 365.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="83"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Power Apps</span>
-        <span class="tag">Power Fx</span>
-        <span class="tag">SharePoint</span>
-        <span class="tag">Power Automate</span>
-      </div>
-    </div>
- 
-    <div class="skill-card animate__animated animate__fadeInUp d4">
-      <span class="skill-icon">🧠</span>
-      <div class="skill-name">Lógica de Negocio</div>
-      <div class="skill-desc">Análisis de procesos reales para convertir reglas administrativas en módulos funcionales, validaciones, estados y flujos de trabajo.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="90"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Procesos</span>
-        <span class="tag">Reglas</span>
-        <span class="tag">Estados</span>
-        <span class="tag">Validación</span>
-        <span class="tag">Flujos</span>
-      </div>
-    </div>
- 
-    <div class="skill-card purple animate__animated animate__fadeInUp d5">
-      <span class="skill-icon">🧩</span>
-      <div class="skill-name">C# & Estructuras de Datos</div>
-      <div class="skill-desc">Desarrollo académico con árboles, listas, grafos, recorridos, formularios Windows Forms y simulación de rutas o conexiones.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="78"></div></div>
-      <div class="skill-tags">
-        <span class="tag">C#</span>
-        <span class="tag">WinForms</span>
-        <span class="tag">Árboles</span>
-        <span class="tag">Listas</span>
-        <span class="tag">Grafos</span>
-      </div>
-    </div>
- 
-    <div class="skill-card red animate__animated animate__fadeInUp d6">
-      <span class="skill-icon">🖼️</span>
-      <div class="skill-name">JavaScript & Canvas</div>
-      <div class="skill-desc">Aplicaciones interactivas en navegador, editores visuales, drag and drop, manipulación de imágenes y exportación de contenido.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="82"></div></div>
-      <div class="skill-tags">
-        <span class="tag">JavaScript</span>
-        <span class="tag">Canvas</span>
-        <span class="tag">Drag & Drop</span>
-        <span class="tag">toDataURL</span>
-      </div>
-    </div>
- 
-    <div class="skill-card animate__animated animate__fadeInUp d1">
-      <span class="skill-icon">🛠️</span>
-      <div class="skill-name">Control de Versiones</div>
-      <div class="skill-desc">Organización de proyectos, manejo de cambios, ramas, repositorios y control del avance del código durante el desarrollo.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="75"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Git</span>
-        <span class="tag">GitHub</span>
-        <span class="tag">Repositorios</span>
-        <span class="tag">Branches</span>
-      </div>
-    </div>
- 
-    <div class="skill-card purple animate__animated animate__fadeInUp d2">
-      <span class="skill-icon">📐</span>
-      <div class="skill-name">Matemática & Métodos Numéricos</div>
-      <div class="skill-desc">Aplicación de cálculo, álgebra, lógica, análisis numérico, métodos iterativos, gráficas y resolución de problemas técnicos.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="80"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Cálculo</span>
-        <span class="tag">Álgebra</span>
-        <span class="tag">MATLAB</span>
-        <span class="tag">Métodos</span>
-        <span class="tag">Lógica</span>
-      </div>
-    </div>
- 
-    <div class="skill-card red animate__animated animate__fadeInUp d3">
-      <span class="skill-icon">💼</span>
-      <div class="skill-name">Visión de Negocio</div>
-      <div class="skill-desc">Comprensión de costos, procesos, eficiencia y valor real para crear soluciones que no solo funcionen, sino que ayuden a decidir mejor.</div>
-      <div class="skill-bar-wrap"><div class="skill-bar" data-pct="76"></div></div>
-      <div class="skill-tags">
-        <span class="tag">Microeconomía</span>
-        <span class="tag">Costos</span>
-        <span class="tag">Optimización</span>
-        <span class="tag">Valor</span>
-      </div>
-    </div>
- 
-  </div>
-</section>
-
-
-
-
-
-
-
-
-
-<!-- ═══════════════════════════════════════════════════════════════
-PROJECTS
-════════════════════════════════════════════════════════════════ -->
-<section id="projects" class="section">
-  <div class="s-header animate__animated animate__fadeInDown">
-    <div class="s-tag">Portfolio</div>
-    <h2 class="s-title">Proyectos <span class="g">Destacados</span></h2>
-  </div>
- 
-  <div class="projects-grid">
- 
-    <!-- Project 01 -->
-    <div class="proj-card animate__animated animate__fadeInUp d1" style="--p-accent:var(--accent)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent),#00ffd5)">📬</div>
-        <div class="proj-badge">Web App</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Sistema de Gestión de Correspondencia</div>
-        <div class="proj-desc">
-          Sistema web administrativo orientado al control, seguimiento y trazabilidad de correspondencia, convocatorias, correlativos y flujos internos del área de Reclutamiento y Selección de Personal. Diseñado para ordenar procesos documentales, distribuir tareas, generar documentos y visualizar cargas laborales en tiempo real.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Registro y control de documentos administrativos</li>
-          <li>Gestión de convocatorias internas y externas</li>
-          <li>Correlativos automáticos por tipo de proceso</li>
-          <li>Asignación de correlativos solicitados a máxima autoridad</li>
-          <li>Generación de documentos Word desde formularios</li>
-          <li>Asignación de convocatorias a profesionales de GRH</li>
-          <li>Seguimiento de tareas por estado y responsable</li>
-          <li>Notificaciones instantáneas a usuarios</li>
-          <li>Dashboard de cargas laborales por profesional</li>
-          <li>Reportes administrativos con filtros</li>
-          <li>Control de acceso por roles y permisos</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">PHP</span>
-        <span class="tag">MySQL</span>
-        <span class="tag">SQL</span>
-        <span class="tag">Bootstrap</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">HTML</span>
-        <span class="tag">CSS</span>
-      </div>
-    </div>
- 
-    <!-- Project 02 -->
-    <div class="proj-card animate__animated animate__fadeInUp d2" style="--p-accent:var(--accent2)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent2),#b06fff)">⛪</div>
-        <div class="proj-badge vba">Web App</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Sistema Integral de Gestión Eclesiástica</div>
-        <div class="proj-desc">
-          Plataforma administrativa desarrollada para centralizar la gestión de miembros, áreas de servicio, doctrina, períodos académicos, asignaciones, notas, asistencias, promociones, expedientes y reportes institucionales dentro de una iglesia.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Gestión completa de miembros con fotografía</li>
-          <li>Expediente individual con historial administrativo</li>
-          <li>Control de áreas de servicio</li>
-          <li>Módulo de doctrina con períodos y niveles</li>
-          <li>Asignación de miembros a módulos doctrinales</li>
-          <li>Actividades dinámicas y notas configurables</li>
-          <li>Registro real de asistencias por alumno</li>
-          <li>Promociones entre períodos doctrinales</li>
-          <li>Exportación de reportes PDF</li>
-          <li>Bitácora de acciones del sistema</li>
-          <li>Control por roles y permisos granulares</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">PHP</span>
-        <span class="tag">MySQL</span>
-        <span class="tag">PDO</span>
-        <span class="tag">Bootstrap</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">Dompdf</span>
-        <span class="tag">DataTables</span>
-      </div>
-    </div>
- 
-    <!-- Project 03 -->
-    <div class="proj-card animate__animated animate__fadeInUp d3" style="--p-accent:var(--accent3)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent3),#ff4d4d)">📄</div>
-        <div class="proj-badge data">PDF Tools</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">DRSP-CONVERT</div>
-        <div class="proj-desc">
-          Suite web de conversión y gestión documental creada para optimizar procesos de oficina. Permite comprimir, convertir, unir, separar y generar documentos PDF desde una interfaz moderna tipo SPA, con procesamiento local, integración API y experiencia visual fluida.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Compresión de PDF con niveles de calidad</li>
-          <li>Conversión de PDF a Word mediante API externa</li>
-          <li>Conversión de PDF a Excel conservando formato</li>
-          <li>Unión de múltiples PDFs en un solo documento</li>
-          <li>Reordenamiento visual con drag and drop</li>
-          <li>Vista previa de documentos mediante miniaturas</li>
-          <li>Edición y separación de páginas PDF</li>
-          <li>Conversión de imágenes JPG/PNG a PDF</li>
-          <li>Modo oscuro, toasts y barras de progreso</li>
-          <li>Optimización de memoria para archivos grandes</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">HTML5</span>
-        <span class="tag">Tailwind CSS</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">PDF.js</span>
-        <span class="tag">PDF-Lib</span>
-        <span class="tag">jsPDF</span>
-        <span class="tag">ConvertAPI</span>
-      </div>
-    </div>
- 
-    <!-- Project 04 -->
-    <div class="proj-card animate__animated animate__fadeInUp d1" style="--p-accent:var(--accent)">
-  <div class="proj-header">
-    <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent),#00ffd5)">🔳</div>
-    <div class="proj-badge">Power App</div>
-  </div>
- 
-  <div class="proj-body">
-    <div class="proj-title">App de Registro Masivo con Generación de QR</div>
-    <div class="proj-desc">
-      Aplicación empresarial desarrollada con Power Apps y herramientas de Microsoft 365 para registrar participantes de forma masiva, generar códigos QR únicos y facilitar la identificación, validación y control de información desde una solución rápida, moderna y conectada a Office.
-    </div>
- 
-    <ul class="proj-features">
-      <li>Registro masivo de personas desde Power Apps</li>
-      <li>Generación automática de códigos QR únicos</li>
-      <li>Identificación individual por participante o registro</li>
-      <li>Almacenamiento de información en listas de SharePoint</li>
-      <li>Validación de datos antes de guardar registros</li>
-      <li>Consulta rápida de información mediante QR</li>
-      <li>Control de registros activos, pendientes o validados</li>
-      <li>Automatización de procesos con Power Automate</li>
-      <li>Exportación y organización de datos con Excel Online</li>
-      <li>Integración con herramientas de Office y Microsoft 365</li>
-      <li>Diseño responsive para uso desde celular o computadora</li>
-    </ul>
-  </div>
- 
-  <div class="proj-footer">
-    <span class="tag">Power Apps</span>
-    <span class="tag">Power Fx</span>
-    <span class="tag">SharePoint Lists</span>
-    <span class="tag">Power Automate</span>
-    <span class="tag">Excel Online</span>
-    <span class="tag">Office 365</span>
-    <span class="tag">QR</span>
-  </div>
-</div>
-
-    <div class="proj-card animate__animated animate__fadeInUp d1" style="--p-accent:var(--accent)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent),#ff8c42)">⚽</div>
-        <div class="proj-badge">Power App</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Quiniela / Reto Futbolero Mundial 2026</div>
-        <div class="proj-desc">
-          Aplicación interactiva empresarial para registrar pronósticos de partidos, calcular puntos automáticamente y visualizar rankings en tiempo real. Integra datos, usuarios, reglas de puntuación, filtros por fase y automatización con Microsoft 365.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Registro de pronósticos por usuario</li>
-          <li>Validación de resultados por partido</li>
-          <li>Sistema automático de puntos</li>
-          <li>Ranking general en tiempo real</li>
-          <li>Filtros por grupos, fases y partidos finalizados</li>
-          <li>Diseño tipo dashboard responsivo</li>
-          <li>Listas conectadas en SharePoint</li>
-          <li>Automatización de resultados con Power Automate</li>
-          <li>Integración completa con Microsoft 365</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">Power Apps</span>
-        <span class="tag">Power Fx</span>
-        <span class="tag">SharePoint Lists</span>
-        <span class="tag">Power Automate</span>
-       
-        <span class="tag">Microsoft 365</span>
-      </div>
-    </div>
-
-
-    <!-- Project 04 -->
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-    <!-- Project 05 -->
-    <div class="proj-card animate__animated animate__fadeInUp d2" style="--p-accent:var(--accent2)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent2),#5e42ff)">🏫</div>
-        <div class="proj-badge vba">Web App</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Sistema de Gestión Escolar</div>
-        <div class="proj-desc">
-          Plataforma web académica diseñada para administrar alumnos, docentes, cursos, horarios, notas, asistencia y reportes escolares desde una sola aplicación. Orientada a instituciones educativas que necesitan centralizar su información.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Módulo multirol: administrador, docente y alumno</li>
-          <li>Gestión de alumnos y docentes</li>
-          <li>Administración de cursos y horarios</li>
-          <li>Control de notas académicas</li>
-          <li>Registro de asistencias</li>
-          <li>Panel de reportes con filtros dinámicos</li>
-          <li>Autenticación segura con sesiones PHP</li>
-          <li>Base de datos relacional en MySQL</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">HTML</span>
-        <span class="tag">CSS</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">PHP</span>
-        <span class="tag">MySQL</span>
-        <span class="tag">Bootstrap</span>
-      </div>
-    </div>
- 
-    <!-- Project 06 -->
-    <div class="proj-card animate__animated animate__fadeInUp d3" style="--p-accent:var(--accent3)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent3),#b06fff)">👥</div>
-        <div class="proj-badge data">Excel VBA</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Banco de Candidatos y Bajas</div>
-        <div class="proj-desc">
-          Sistema desarrollado en Excel VBA para administrar información de candidatos, bajas, documentación y registros internos. Incluye menús personalizados, formularios, validaciones, acceso por usuario y automatización de procesos repetitivos.
-        </div>
- 
-        <ul class="proj-features">
-          <li>Login con validación de credenciales</li>
-          <li>Menús tipo SPA dentro de Excel</li>
-          <li>Formularios personalizados con UserForms</li>
-          <li>Registro y consulta de candidatos</li>
-          <li>Visualización de documentación registrada</li>
-          <li>Control de acceso por nivel de usuario</li>
-          <li>Protección de hojas y rangos sensibles</li>
-          <li>Automatización mediante macros avanzadas</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">VBA</span>
-        <span class="tag">Excel</span>
-        <span class="tag">UserForms</span>
-        <span class="tag">Macros</span>
-        <span class="tag">SQL Básico</span>
-        <span class="tag">Automatización</span>
-      </div>
-    </div>
- 
-    <!-- Project 07 -->
-    <div class="proj-card animate__animated animate__fadeInUp d1" style="--p-accent:var(--accent)">
-      <div class="proj-header">
-        <div class="proj-icon" style="background:linear-gradient(135deg,var(--accent),#ff4d8d)">📊</div>
-        <div class="proj-badge">Reportes</div>
-      </div>
- 
-      <div class="proj-body">
-        <div class="proj-title">Reportes con Filtros Avanzados</div>
-        <div class="proj-desc">
-          Motor de reportes dinámicos en Excel diseñado para consultar, filtrar, visualizar y exportar información estructurada. Permite generar análisis rápidos mediante filtros en cascada, gráficos automáticos y lógica avanzada con VBA.
-        </div>
-        
-        
-
-        <ul class="proj-features">
-          <li>Filtros multinivel con actualización en cascada</li>
-          <li>Gráficos automáticos según selección</li>
-          <li>Exportación de reportes a PDF y CSV</li>
-          <li>Fórmulas avanzadas para análisis de datos</li>
-          <li>Macros VBA para procesos complejos</li>
-          <li>Visualización ordenada de información</li>
-          <li>Automatización de reportes administrativos</li>
-        </ul>
-      </div>
- 
-      <div class="proj-footer">
-        <span class="tag">VBA</span>
-        <span class="tag">Excel</span>
-        <span class="tag">SQL</span>
-        <span class="tag">Data</span>
-        <span class="tag">Reportes</span>
-      </div>
-    </div>
- 
-  </div>
-</section>
-
-
-
-
-
-
-
-
-<!-- ═══════════════════════════════════════════════════════════════
-CONTACT
-════════════════════════════════════════════════════════════════ -->
-<section id="contact" class="section">
-  <div class="contact-wrap contact-pro">
- 
-    <div class="s-header animate__animated animate__fadeInDown">
-      <div class="s-tag">Conectemos</div>
-      <h2 class="s-title">Trabajemos <span class="g">Juntos</span></h2>
-    </div>
- 
-    <p class="contact-big animate__animated animate__fadeIn d1">
-      ¿Necesitas una web, automatización, sistema administrativo o una solución que ordene tus procesos?
-      <br />
-      <strong>Estoy disponible para crear algo funcional, moderno y bien hecho.</strong>
-    </p>
- 
-    <div class="contact-grid-pro animate__animated animate__fadeInUp d2">
- 
-      <!-- WhatsApp -->
-      <a
-        href="https://wa.me/50237808239?text=Hola%20Said,%20he%20visto%20tu%20portafolio%20y%20me%20gustaría%20contactarte."
-        target="_blank"
-        rel="noopener"
-        class="contact-tile whatsapp"
-      >
-        <div class="contact-icon">
-          <svg class="contact-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.05 0C5.47 0 .11 5.34.11 11.92c0 2.1.55 4.15 1.6 5.96L0 24l6.27-1.64a11.93 11.93 0 0 0 5.78 1.47h.01c6.58 0 11.94-5.35 11.94-11.92 0-3.18-1.24-6.17-3.48-8.43ZM12.06 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.72.97.99-3.63-.23-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.98c0 5.45-4.44 9.89-9.9 9.89Zm5.42-7.4c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.06 2.87 1.21 3.07c.15.2 2.09 3.19 5.06 4.47.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35Z"/></svg>
-        </div>
-        <div class="contact-title">WhatsApp</div>
-        <div class="contact-value">+502 3780-8239</div>
-        <span class="contact-action">Enviar mensaje</span>
-      </a>
- 
-      <!-- GitHub -->
-      <a
-        href="https://github.com/Said1Ojeda"
-        target="_blank"
-        rel="noopener"
-        class="contact-tile github"
-      >
-        <div class="contact-icon">
-          <svg class="contact-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .3Z"/></svg>
-        </div>
-        <div class="contact-title">GitHub</div>
-        <div class="contact-value">@Said1Ojeda</div>
-        <span class="contact-action">Ver repositorios</span>
-      </a>
- 
-      <!-- Correo -->
-      <a
-        href="mailto:saidfabian12@gmail.com?subject=Contacto%20desde%20portafolio&body=Hola%20Said,%20he%20visto%20tu%20portafolio%20y%20me%20gustaría%20hablar%20contigo."
-        class="contact-tile mail"
-      >
-        <div class="contact-icon">
-          <svg class="contact-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm9 7.2L3.4 7.1a.8.8 0 0 0-.4.69v.33l9 5.35 9-5.35v-.33a.8.8 0 0 0-.4-.69L12 12.2Zm0 2.12L3 8.96V17a.8.8 0 0 0 .8.8h16.4a.8.8 0 0 0 .8-.8V8.96l-9 5.36Z"/></svg>
-        </div>
-        <div class="contact-title">Correo</div>
-        <div class="contact-value">saidfabian12@gmail.com</div>
-        <span class="contact-action">Enviar correo</span>
-      </a>
- 
-      <!-- Instagram -->
-      <a
-        href="https://instagram.com/unset_said"
-        target="_blank"
-        rel="noopener"
-        class="contact-tile instagram"
-      >
-        <div class="contact-icon">
-          <svg class="contact-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.95 1.7a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
-        </div>
-        <div class="contact-title">Instagram</div>
-        <div class="contact-value">@unset_said</div>
-        <span class="contact-action">Ver perfil</span>
-      </a>
- 
-    </div>
- 
-    <div class="contact-info-panel animate__animated animate__fadeInUp d3">
- 
-      <div class="ci-pro-item">
-        <span class="ci-pro-icon">📍</span>
+  <section id="contacto">
+    <div class="envoltura">
+      <div class="contacto">
         <div>
-          <span class="ci-pro-label">Ubicación</span>
-          <strong>Ciudad de Guatemala, Guatemala</strong>
+          <h2>¿Tienes un proceso que todavía se hace a mano?</h2>
+          <p>Cuéntame cómo lo hacen hoy y vemos cómo volverlo un sistema. También platico con gusto de código viejo y automatizaciones.</p>
+        </div>
+        <div class="canales">
+          <a class="canal principal" href="https://wa.me/50237808239?text=Hola%20Said,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20platicar." target="_blank" rel="noopener"><b>WhatsApp</b><span>+502 3780-8239</span></a>
+          <a class="canal" href="mailto:saidfabian12@gmail.com"><b>Correo</b><span>saidfabian12@gmail.com</span></a>
+          <a class="canal" href="https://github.com/Said1Ojeda" target="_blank" rel="noopener"><b>GitHub</b><span>@Said1Ojeda</span></a>
+          <a class="canal" href="https://www.linkedin.com/in/said-ojeda-fabian" target="_blank" rel="noopener"><b>LinkedIn</b><span>Said Ojeda Fabián</span></a>
+          <a class="canal" href="https://instagram.com/unset_said" target="_blank" rel="noopener"><b>Instagram</b><span>@unset_said</span></a>
         </div>
       </div>
- 
-      <div class="ci-pro-item">
-        <span class="ci-pro-icon">🎓</span>
-        <div>
-          <span class="ci-pro-label">Universidad</span>
-          <strong>Universidad Mariano Gálvez</strong>
-        </div>
-      </div>
- 
-      <div class="ci-pro-item">
-        <span class="ci-pro-icon">💻</span>
-        <div>
-          <span class="ci-pro-label">Perfil</span>
-          <strong>Desarrollador Full Stack en formación</strong>
-        </div>
-      </div>
- 
-      <div class="ci-pro-item available">
-        <span class="ci-pro-icon">●</span>
-        <div>
-          <span class="ci-pro-label">Disponibilidad</span>
-          <strong>Disponible para proyectos y colaboraciones</strong>
-        </div>
-      </div>
- 
     </div>
- 
+  </section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <span>© 2026 Said Ojeda Fabián</span>
+    <span>Hecho en Guatemala</span>
   </div>
-</section>
+</footer>
 
-  
-
-
-
-
-
- 
-
-
-
-
-  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
-  <footer>
-    <p>© 2026 <span>Said Ojeda Fabián</span>. Todos los derechos reservados.</p>
-    <p>V 1.0</p>
-  </footer>
-
-  <!-- ═══════════════════════════════════════════════════════════════
-       JAVASCRIPT
-  ════════════════════════════════════════════════════════════════ -->
-  <script>
-    (() => {
-      'use strict';
-
-      const $  = (selector, root = document) => root.querySelector(selector);
-      const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-
-      /* ── CUSTOM CURSOR ────────────────────────────────────────── */
-      const cur = $('#cursor');
-      const ring = $('#cursor-ring');
-      let mx = 0, my = 0, rx = 0, ry = 0;
-
-      const finePointer = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
-      if (finePointer && cur && ring) {
-        document.addEventListener('mousemove', e => {
-          mx = e.clientX;
-          my = e.clientY;
-        }, { passive: true });
-
-        const animCursor = () => {
-          rx += (mx - rx) * .18;
-          ry += (my - ry) * .18;
-          cur.style.left = mx + 'px';
-          cur.style.top = my + 'px';
-          ring.style.left = rx + 'px';
-          ring.style.top = ry + 'px';
-          requestAnimationFrame(animCursor);
-        };
-        animCursor();
-      }
-
-      /* ── SPA NAVIGATION ────────────────────────────────────────── */
-      const validSections = ['hero', 'about', 'skills', 'projects', 'contact'];
-
-      function animateBars() {
-        setTimeout(() => {
-          $$('.skill-bar').forEach(bar => {
-            bar.style.width = (bar.dataset.pct || 0) + '%';
-          });
-        }, 250);
-      }
-
-      function resetBars() {
-        $$('.skill-bar').forEach(bar => {
-          bar.style.width = '0%';
-        });
-      }
-
-      function restartAnimations(target) {
-        if (!target) return;
-        $$('.animate__animated', target).forEach(el => {
-          el.style.animation = 'none';
-          el.offsetHeight; // force reflow
-          el.style.animation = '';
-        });
-      }
-
-      function showSection(id) {
-        if (!validSections.includes(id)) id = 'hero';
-        const target = document.getElementById(id);
-        if (!target) return;
-
-        $$('.section').forEach(section => {
-          section.classList.toggle('active', section.id === id);
-        });
-
-        $$('.nav-links a[data-section]').forEach(link => {
-          link.classList.toggle('active', link.dataset.section === id);
-        });
-
-        if (id !== 'skills') resetBars();
-        restartAnimations(target);
-        if (id === 'skills') animateBars();
-
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      }
-
-      // Delegación: aunque Animate.css reinicie elementos, los botones siguen funcionando.
-      document.addEventListener('click', event => {
-        const sectionLink = event.target.closest('[data-section]');
-        if (sectionLink) {
-          event.preventDefault();
-          showSection(sectionLink.dataset.section);
-          return;
-        }
-
-        const gotoBtn = event.target.closest('[data-goto]');
-        if (gotoBtn) {
-          event.preventDefault();
-          showSection(gotoBtn.dataset.goto);
-        }
+<script>
+  // compara contar plazas contra carga ponderada en el proyecto estrella
+  (function () {
+    var datos = {
+      conteo: { a: 3, b: 3, ta: '3 plazas', tb: '3 plazas', max: 3, texto: 'Contando filas, los dos se ven igual de ocupados.' },
+      peso:   { a: 5.7, b: 14.7, ta: '5.7 pts', tb: '14.7 pts', max: 14.7, texto: 'Los dos tienen 3 plazas, pero las de B están en fases pesadas y con atrasos.' }
+    };
+    var botones = document.querySelectorAll('[data-modo]');
+    var barraA = document.querySelector('[data-barra-a]');
+    var barraB = document.querySelector('[data-barra-b]');
+    botones.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var d = datos[btn.dataset.modo];
+        botones.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        barraA.style.setProperty('--w', (d.a / d.max * 100) + '%');
+        barraB.style.setProperty('--w', (d.b / d.max * 100) + '%');
+        barraA.classList.toggle('peso', btn.dataset.modo === 'peso');
+        barraB.classList.toggle('peso', btn.dataset.modo === 'peso');
+        document.querySelector('[data-a]').textContent = d.ta;
+        document.querySelector('[data-b]').textContent = d.tb;
+        document.querySelector('[data-explica]').textContent = d.texto;
       });
-
-      // Exponer por si querés llamarlo desde consola o botones futuros.
-      window.showPortfolioSection = showSection;
-
-      // Init
-      document.addEventListener('DOMContentLoaded', () => showSection('hero'));
-      if (document.readyState !== 'loading') showSection('hero');
-    })();
-  </script>
+    });
+  })();
+</script>
 </body>
 </html>

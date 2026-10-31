@@ -134,6 +134,25 @@ details .lista{margin:14px 0 0}
 .proyecto.abierto{border-style:dashed}
 .proyecto.abierto a{font-weight:600;color:var(--cielo)}
 
+/* repos en vivo desde la api de github */
+.github-datos{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+.dato{background:var(--hoja);border:1px solid var(--linea);border-radius:14px;padding:14px 20px;min-width:140px}
+.dato b{display:block;font-family:var(--display);font-size:1.8rem;line-height:1.1}
+.dato span{color:var(--tinta-suave);font-size:.9rem}
+.repos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.repo{background:var(--hoja);border:1px solid var(--linea);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;min-height:190px}
+.repo h3{font-size:1.15rem;word-break:break-word}
+.repo h3 a{color:inherit;text-decoration:none}
+.repo h3 a:hover{color:var(--cielo)}
+.repo p{color:var(--tinta-suave);font-size:.95rem;flex:1}
+.repo-pie{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-size:.85rem;color:var(--tinta-suave)}
+.repo-pie i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:var(--c,var(--linea))}
+.repo-probar{font-weight:600;color:var(--cielo);text-decoration:none;font-size:.9rem}
+.repo.cargando{background:linear-gradient(90deg,var(--hoja),var(--papel),var(--hoja));background-size:200% 100%;animation:brillo 1.4s linear infinite}
+@keyframes brillo{to{background-position:-200% 0}}
+.repos-aviso{grid-column:1/-1;color:var(--tinta-suave)}
+.repos-aviso a{color:var(--cielo);font-weight:600}
+
 /* habilidades */
 .cajas{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
 .caja h3{font-size:1.2rem;margin-bottom:8px;display:flex;align-items:center;gap:10px}
@@ -170,12 +189,14 @@ footer{padding:40px 0 56px;color:var(--tinta-suave);font-size:.92rem}
 footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
 @media (max-width:900px){
+  .repos{grid-template-columns:1fr 1fr}
   .portada .envoltura,.estrella,.contacto{grid-template-columns:1fr}
   .cajas{grid-template-columns:1fr 1fr}
   .proyectos{grid-template-columns:1fr}
   .hoja{transform:none;max-width:480px}
 }
 @media (max-width:620px){
+  .repos{grid-template-columns:1fr}
   .barra nav{display:none}
   .portada{padding:44px 0 64px}
   section{padding:64px 0}
@@ -198,6 +219,7 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
     <a class="marca" href="#inicio" aria-label="Inicio">Said<span></span></a>
     <nav aria-label="Secciones">
       <a href="#proyectos">Proyectos</a>
+      <a href="#github">GitHub</a>
       <a href="#habilidades">Habilidades</a>
       <a href="#trayectoria">Trayectoria</a>
       <a href="#contacto">Contacto</a>
@@ -378,6 +400,21 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
     </div>
   </section>
 
+  <section id="github">
+    <div class="envoltura">
+      <div class="cabeza">
+        <h2>Activo en GitHub</h2>
+        <p>Lo último que he subido, directo de GitHub. Hay juegos y cosas que se pueden probar en el navegador, y si alguno te gusta una estrella ayuda bastante.</p>
+      </div>
+      <div class="github-datos" id="githubDatos" aria-live="polite"></div>
+      <div class="repos" id="repos" aria-live="polite">
+        <div class="repo cargando" aria-hidden="true"></div>
+        <div class="repo cargando" aria-hidden="true"></div>
+        <div class="repo cargando" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
   <section id="habilidades">
     <div class="envoltura">
       <div class="cabeza">
@@ -488,6 +525,130 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
         document.querySelector('[data-explica]').textContent = d.texto;
       });
     });
+  })();
+</script>
+<script>
+  // trae los repos publicos con la api de github y los pinta en la seccion activo en github
+  // se guardan un rato en la sesion para no gastar el limite de la api en cada recarga
+  (function () {
+    var USUARIO = 'Said1Ojeda';
+    var CLAVE = 'portafolio-github';
+    var DURA = 10 * 60 * 1000;
+    var COLORES = { JavaScript: '#f1e05a', TypeScript: '#3178c6', PHP: '#4F5D95', 'C#': '#178600', HTML: '#e34c26', CSS: '#563d7c', ColdFusion: '#ed2cd6', Python: '#3572A5' };
+    var caja = document.getElementById('repos');
+    var datos = document.getElementById('githubDatos');
+
+    function leerGuardado() {
+      try {
+        var g = JSON.parse(sessionStorage.getItem(CLAVE) || 'null');
+        if (g && Date.now() - g.cuando < DURA) return g;
+      } catch (e) {}
+      return null;
+    }
+
+    function guardar(perfil, repos) {
+      try { sessionStorage.setItem(CLAVE, JSON.stringify({ cuando: Date.now(), perfil: perfil, repos: repos })); } catch (e) {}
+    }
+
+    function pedir(url) {
+      return fetch(url, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) {
+        if (!r.ok) throw new Error('github respondio ' + r.status);
+        return r.json();
+      });
+    }
+
+    function haceCuanto(fecha) {
+      var dias = Math.floor((Date.now() - new Date(fecha).getTime()) / 86400000);
+      if (dias <= 0) return 'hoy';
+      if (dias === 1) return 'ayer';
+      if (dias < 30) return 'hace ' + dias + ' días';
+      var meses = Math.floor(dias / 30);
+      return meses === 1 ? 'hace un mes' : 'hace ' + meses + ' meses';
+    }
+
+    function elemento(tag, clase, texto) {
+      var e = document.createElement(tag);
+      if (clase) e.className = clase;
+      if (texto != null) e.textContent = texto;
+      return e;
+    }
+
+    function dato(numero, texto) {
+      var d = elemento('div', 'dato');
+      d.appendChild(elemento('b', '', String(numero)));
+      d.appendChild(elemento('span', '', texto));
+      return d;
+    }
+
+    function pintar(perfil, repos) {
+      var propios = repos.filter(function (r) { return !r.fork && r.name.toLowerCase() !== USUARIO.toLowerCase(); });
+      var estrellas = propios.reduce(function (t, r) { return t + r.stargazers_count; }, 0);
+
+      datos.replaceChildren(
+        dato(perfil.public_repos, 'repos públicos'),
+        dato(estrellas, estrellas === 1 ? 'estrella' : 'estrellas'),
+        dato(perfil.followers, perfil.followers === 1 ? 'seguidor' : 'seguidores')
+      );
+
+      // primero lo que se movio hace poco
+      propios.sort(function (a, b) { return new Date(b.pushed_at) - new Date(a.pushed_at); });
+      var tarjetas = propios.slice(0, 6).map(function (r) {
+        var t = elemento('article', 'repo');
+        var h = elemento('h3');
+        var a = elemento('a', '', r.name);
+        a.href = r.html_url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        h.appendChild(a);
+        t.appendChild(h);
+        t.appendChild(elemento('p', '', r.description || 'Sin descripción todavía.'));
+
+        var pie = elemento('div', 'repo-pie');
+        if (r.language) {
+          var len = elemento('span', '', r.language);
+          var punto = elemento('i');
+          punto.style.setProperty('--c', COLORES[r.language] || '#8b95a7');
+          len.prepend(punto);
+          pie.appendChild(len);
+        }
+        pie.appendChild(elemento('span', '', '★ ' + r.stargazers_count));
+        pie.appendChild(elemento('span', '', haceCuanto(r.pushed_at)));
+        t.appendChild(pie);
+
+        if (r.homepage && /^https:\/\//.test(r.homepage)) {
+          var probar = elemento('a', 'repo-probar', 'Probarlo en línea →');
+          probar.href = r.homepage;
+          probar.target = '_blank';
+          probar.rel = 'noopener';
+          t.appendChild(probar);
+        }
+        return t;
+      });
+      caja.replaceChildren.apply(caja, tarjetas);
+    }
+
+    // si github no responde se deja el enlace al perfil y ya
+    function sinConexion() {
+      datos.replaceChildren();
+      var p = elemento('p', 'repos-aviso', 'No se pudieron cargar los repos en este momento. ');
+      var a = elemento('a', '', 'Verlos en GitHub');
+      a.href = 'https://github.com/' + USUARIO;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      p.appendChild(a);
+      caja.replaceChildren(p);
+    }
+
+    var guardado = leerGuardado();
+    if (guardado) return pintar(guardado.perfil, guardado.repos);
+
+    Promise.all([
+      pedir('https://api.github.com/users/' + USUARIO),
+      pedir('https://api.github.com/users/' + USUARIO + '/repos?per_page=100&type=owner')
+    ]).then(function (r) {
+      guardar(r[0], r[1]);
+      pintar(r[0], r[1]);
+    }).catch(sinConexion);
   })();
 </script>
 </body>

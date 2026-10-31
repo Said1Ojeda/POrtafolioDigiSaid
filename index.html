@@ -532,7 +532,7 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
   // se guardan un rato en la sesion para no gastar el limite de la api en cada recarga
   (function () {
     var USUARIO = 'Said1Ojeda';
-    var CLAVE = 'portafolio-github';
+    var CLAVE = 'portafolio-github-2';
     var DURA = 10 * 60 * 1000;
     var COLORES = { JavaScript: '#f1e05a', TypeScript: '#3178c6', PHP: '#4F5D95', 'C#': '#178600', HTML: '#e34c26', CSS: '#563d7c', ColdFusion: '#ed2cd6', Python: '#3572A5' };
     var caja = document.getElementById('repos');
@@ -580,6 +580,13 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
       return d;
     }
 
+    // si el repo no trae su sitio en about pero si tiene pages, se arma el enlace de pages
+    function sitio(r) {
+      if (r.homepage && /^https:\/\//.test(r.homepage)) return r.homepage;
+      if (r.has_pages) return 'https://' + USUARIO.toLowerCase() + '.github.io/' + encodeURIComponent(r.name) + '/';
+      return '';
+    }
+
     function pintar(perfil, repos) {
       var propios = repos.filter(function (r) { return !r.fork && r.name.toLowerCase() !== USUARIO.toLowerCase(); });
       var estrellas = propios.reduce(function (t, r) { return t + r.stargazers_count; }, 0);
@@ -615,9 +622,10 @@ footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:
         pie.appendChild(elemento('span', '', haceCuanto(r.pushed_at)));
         t.appendChild(pie);
 
-        if (r.homepage && /^https:\/\//.test(r.homepage)) {
+        var enLinea = sitio(r);
+        if (enLinea) {
           var probar = elemento('a', 'repo-probar', 'Probarlo en línea →');
-          probar.href = r.homepage;
+          probar.href = enLinea;
           probar.target = '_blank';
           probar.rel = 'noopener';
           t.appendChild(probar);

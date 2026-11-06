@@ -494,3 +494,21 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
     .por-dibujar .d-texto, .por-dibujar .d-sub, .por-dibujar .d-lapiz, .por-dibujar .d-cota-texto { opacity: 1 !important; }
     .js .revelar { opacity: 1; transform: none; }
 }
+
+/* para imprimir o guardar en pdf, sale en blanco y sin lo que no sirve en papel */
+@media print {
+    :root, :root[data-tema] {
+        --fondo: #fff; --fondo-2: #fff; --panel: #fff;
+        --tinta: #111; --tinta-2: #333; --tinta-3: #555;
+        --trazo: #1d4f91; --borde: #bbb; --cuadricula: transparent;
+    }
+    body { background: #fff; }
+    .barra, .cajetin, .saltar, .boton-tema, .boton-chico, .filtros, .acciones, .punto-vivo { display: none !important; }
+    .hoja { padding: 24px 0; break-inside: avoid-page; }
+    .plano-sistema, .matriz-marco, .lab, .tarjeta-datos, .lamina { box-shadow: none; break-inside: avoid; }
+    .dibujar .d-linea, .dibujar .d-caja, .por-dibujar .d-linea, .por-dibujar .d-caja { animation: none; stroke-dashoffset: 0 !important; }
+    .dibujar .d-texto, .dibujar .d-sub, .dibujar .d-lapiz, .por-dibujar .d-texto, .por-dibujar .d-sub, .por-dibujar .d-lapiz, .por-dibujar .d-cota-texto { opacity: 1 !important; animation: none; }
+    .d-pulso { display: none; }
+    .js .revelar { opacity: 1; transform: none; }
+    a { color: inherit; text-decoration: none; }
+}

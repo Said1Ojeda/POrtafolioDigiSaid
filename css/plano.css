@@ -396,6 +396,33 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .matriz-nota { margin: 14px 0 0; text-align: right; }
 
+/* laboratorio en vivo */
+.lab { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--panel); }
+.lab-cabeza { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 20px; border-bottom: 1px solid var(--borde); color: var(--tinta-3); font-size: .9rem; }
+.punto-vivo { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); margin-right: 4px; animation: latido 2s ease-in-out infinite; }
+@keyframes latido { 50% { opacity: .35; } }
+.bitacora { list-style: none; margin: 0; padding: 6px 0; }
+.bitacora li { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 18px; align-items: baseline; padding: 12px 20px; }
+.bitacora li.sin-fecha { grid-template-columns: minmax(0, 1fr) auto; }
+.bitacora li + li { border-top: 1px dashed var(--borde); }
+.bitacora time { color: var(--tinta-3); font-size: .9rem; font-variant-numeric: tabular-nums; }
+.bitacora .repo { font-family: var(--letra-titulo); font-weight: 700; font-size: 1.1rem; color: var(--tinta); text-decoration: none; }
+.bitacora .repo:hover { color: var(--trazo); }
+.bitacora p { margin: 2px 0 0; color: var(--tinta-2); font-size: .95rem; }
+.bitacora .lado { display: flex; gap: 14px; align-items: center; font-size: .88rem; color: var(--tinta-3); white-space: nowrap; }
+.lengua::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--color-lengua, var(--tinta-3)); margin-right: 6px; }
+
+/* contacto */
+.contacto-rejilla { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.contacto-frase { font-family: var(--letra-titulo); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 600; line-height: 1.2; margin: 0 0 28px; max-width: 24ch; }
+.tarjeta-datos { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--panel); padding: 20px; display: grid; grid-template-columns: auto 1fr; gap: 20px; }
+.tarjeta-datos img { border-radius: 12px; border: 1px solid var(--borde); }
+.tarjeta-datos dl { margin: 0; }
+.tarjeta-datos dl div { display: grid; grid-template-columns: 90px 1fr; gap: 10px; padding: 7px 0; }
+.tarjeta-datos dl div + div { border-top: 1px dashed var(--borde); }
+.tarjeta-datos dt { color: var(--tinta-3); font-size: .9rem; }
+.tarjeta-datos dd { margin: 0; overflow-wrap: anywhere; }
+
 /* cajetin de plano, dice en que hoja vas */
 .cajetin {
     position: fixed;
@@ -427,6 +454,7 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 .js .revelar.visto { opacity: 1; transform: none; }
 
 @media (max-width: 900px) {
+    .contacto-rejilla { grid-template-columns: 1fr; gap: 32px; }
     .planos { grid-template-columns: 1fr; }
     .portada .envoltura { grid-template-columns: 1fr; gap: 56px; }
     .portada { min-height: auto; }
@@ -434,6 +462,8 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 }
 
 @media (max-width: 560px) {
+    .bitacora li { grid-template-columns: 1fr; gap: 4px; }
+    .tarjeta-datos { grid-template-columns: 1fr; }
     .matriz thead { display: none; }
     .matriz tr { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px 16px; border-bottom: 1px dashed var(--borde); }
     .matriz tbody tr:last-child { border-bottom: 0; }

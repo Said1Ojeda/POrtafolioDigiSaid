@@ -15,14 +15,14 @@
     }
 
     // largo real de cada trazo para que el dibujo no se corte ni se pase
-    document.querySelectorAll('.dibujar .d-linea, .dibujar .d-caja').forEach(function (el) {
+    document.querySelectorAll('.dibujar .d-linea, .dibujar .d-caja, .por-dibujar .d-linea, .por-dibujar .d-caja').forEach(function (el) {
         if (typeof el.getTotalLength !== 'function') return;
         var largo = Math.ceil(el.getTotalLength()) + 2;
         el.style.setProperty('--largo', largo);
     });
 
     // el retraso del grupo lo heredan las cajas y textos
-    document.querySelectorAll('.dibujar g[style]').forEach(function (g) {
+    document.querySelectorAll('.dibujar g[style], .por-dibujar g[style]').forEach(function (g) {
         var r = g.style.getPropertyValue('--retraso');
         if (!r) return;
         g.querySelectorAll('*').forEach(function (h) {
@@ -59,6 +59,19 @@
         revelar.forEach(function (el) { obs.observe(el); });
     } else {
         revelar.forEach(function (el) { el.classList.add('visto'); });
+    }
+
+    // los planos de abajo empiezan a dibujarse cuando entran a la pantalla
+    var porDibujar = document.querySelectorAll('.por-dibujar');
+    if ('IntersectionObserver' in window) {
+        var obsDibujo = new IntersectionObserver(function (entradas) {
+            entradas.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('dibujar'); obsDibujo.unobserve(e.target); }
+            });
+        }, { threshold: .35 });
+        porDibujar.forEach(function (el) { obsDibujo.observe(el); });
+    } else {
+        porDibujar.forEach(function (el) { el.classList.add('dibujar'); });
     }
 
     // numeros en vivo, si la api no responde se quedan los de respaldo

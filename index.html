@@ -90,6 +90,119 @@
     </div>
   </section>
 
+  <section class="hoja" id="sistemas" data-hoja="02" data-titulo="Sistemas">
+    <div class="envoltura">
+      <div class="rotulo"><span class="num">02</span><h2>Sistemas</h2></div>
+      <p class="intro">Cuatro piezas de trabajo real, dibujadas como plano. Sin nombres ni datos de nadie, solo cómo están hechas por dentro.</p>
+
+      <div class="planos">
+
+        <article class="plano-sistema revelar">
+          <header class="plano-cabeza">
+            <span class="lamina-num">Lámina 2.1</span>
+            <span class="estado" data-estado="probado">Probado</span>
+          </header>
+          <h3>Reservas con cupo limitado</h3>
+          <p>Dos personas piden el último lugar al mismo tiempo. Cada reserva lleva la versión del registro y si alguien ya la tomó, la segunda recibe conflicto en vez de duplicarse.</p>
+          <svg viewBox="0 0 400 220" class="por-dibujar" role="img" aria-label="Dos solicitudes compiten por el último cupo, una se confirma y la otra recibe conflicto">
+            <g style="--retraso:0s"><rect class="d-caja" x="10" y="24" width="120" height="52" rx="8"/><text class="d-texto" x="24" y="48">Persona A</text><text class="d-sub" x="24" y="66" id="res-a">esperando</text></g>
+            <g style="--retraso:.2s"><rect class="d-caja" x="10" y="144" width="120" height="52" rx="8"/><text class="d-texto" x="24" y="168">Persona B</text><text class="d-sub" x="24" y="186" id="res-b">esperando</text></g>
+            <g style="--retraso:.4s"><rect class="d-caja activa" x="262" y="80" width="128" height="60" rx="8" id="cupo-caja"/><text class="d-texto" x="276" y="106">Último cupo</text><text class="d-sub" x="276" y="125" id="cupo-sub">1 disponible</text></g>
+            <path class="d-linea" style="--retraso:.6s" d="M130 50C200 50 200 104 262 104"/>
+            <path class="d-linea" style="--retraso:.7s" d="M130 170C200 170 200 116 262 116"/>
+            <text class="d-cota-texto" x="196" y="110" text-anchor="middle">ETag</text>
+            <circle class="d-pulso viaje" r="5" cx="-20" cy="-20"><animateMotion id="mov-a" begin="indefinite" dur="1s" fill="freeze" path="M130 50C200 50 200 104 262 104"/></circle>
+            <circle class="d-pulso viaje" r="5" cx="-20" cy="-20"><animateMotion id="mov-b" begin="indefinite" dur="1.15s" fill="freeze" path="M130 170C200 170 200 116 262 116"/></circle>
+          </svg>
+          <div class="plano-pie">
+            <button class="boton-chico" type="button" id="simular-cupo">Simular el último cupo</button>
+            <ul class="stack"><li>Power Apps</li><li>Power Automate</li><li>SharePoint</li><li>API REST</li></ul>
+          </div>
+        </article>
+
+        <article class="plano-sistema revelar">
+          <header class="plano-cabeza">
+            <span class="lamina-num">Lámina 2.2</span>
+            <span class="estado" data-estado="uso">En uso</span>
+          </header>
+          <h3>Asistencia con código QR</h3>
+          <p>En la entrada se escanea el código o se busca a la persona. Cada evento lleva su propio conteo y nadie se marca dos veces.</p>
+          <svg viewBox="0 0 400 220" class="por-dibujar" role="img" aria-label="Estados de asistencia, pendiente, presente y retirado">
+            <g style="--retraso:0s"><rect class="d-caja" data-paso="pendiente" x="10" y="70" width="112" height="56" rx="8"/><text class="d-texto" x="24" y="96">Pendiente</text><text class="d-sub" x="24" y="114">inscrito</text></g>
+            <g style="--retraso:.2s"><rect class="d-caja" data-paso="presente" x="144" y="70" width="112" height="56" rx="8"/><text class="d-texto" x="158" y="96">Presente</text><text class="d-sub" x="158" y="114">marcó entrada</text></g>
+            <g style="--retraso:.4s"><rect class="d-caja" data-paso="retirado" x="278" y="70" width="112" height="56" rx="8"/><text class="d-texto" x="292" y="96">Retirado</text><text class="d-sub" x="292" y="114">marcó salida</text></g>
+            <path class="d-linea" style="--retraso:.6s" d="M122 98H144M256 98H278"/>
+            <text class="d-cota-texto" x="133" y="62" text-anchor="middle">entrada</text>
+            <text class="d-cota-texto" x="267" y="62" text-anchor="middle">salida</text>
+            <path class="d-linea" style="--retraso:.8s;stroke:var(--lapiz)" d="M200 126V160H66V126"/>
+            <text class="d-lapiz" x="133" y="186" text-anchor="middle">si ya entró, no cuenta doble</text>
+          </svg>
+          <div class="conteos" aria-live="polite">
+            <span><b id="n-pendiente">6</b> pendientes</span>
+            <span><b id="n-presente">0</b> presentes</span>
+            <span><b id="n-retirado">0</b> retirados</span>
+          </div>
+          <div class="plano-pie">
+            <button class="boton-chico" type="button" id="escanear">Escanear un código</button>
+            <ul class="stack"><li>Power Apps</li><li>Power Fx</li><li>SharePoint</li><li>Power Automate</li></ul>
+          </div>
+        </article>
+
+        <article class="plano-sistema revelar">
+          <header class="plano-cabeza">
+            <span class="lamina-num">Lámina 2.3</span>
+            <span class="estado" data-estado="uso">En uso</span>
+          </header>
+          <h3>Cargas de trabajo por persona</h3>
+          <p>Cada convocatoria tiene sus plazas, y cada plaza un responsable, una fase y un estado. Con eso se ve quién lleva qué y cómo va cada proceso.</p>
+          <svg viewBox="0 0 400 220" class="por-dibujar" role="img" aria-label="Modelo de datos, convocatoria tiene muchas plazas, cada plaza tiene responsable, fase y estado">
+            <g style="--retraso:0s"><rect class="d-caja" x="10" y="14" width="120" height="78" rx="6"/><text class="d-texto" x="22" y="36">Convocatoria</text><path class="d-cota" d="M10 46H130"/><text class="d-sub" x="22" y="64">id</text><text class="d-sub" x="22" y="81">nombre, fecha</text></g>
+            <g style="--retraso:.2s"><rect class="d-caja activa" x="200" y="14" width="190" height="96" rx="6"/><text class="d-texto" x="212" y="36">Plaza</text><path class="d-cota" d="M200 46H390"/><text class="d-sub" x="212" y="64">convocatoria_id</text><text class="d-sub" x="212" y="81">responsable_id</text><text class="d-sub" x="212" y="98">fase_id, estado_id</text></g>
+            <g style="--retraso:.4s"><rect class="d-caja" x="10" y="150" width="120" height="56" rx="6"/><text class="d-texto" x="22" y="174">Responsable</text><text class="d-sub" x="22" y="193">usuarios</text></g>
+            <g style="--retraso:.5s"><rect class="d-caja" x="200" y="150" width="86" height="56" rx="6"/><text class="d-texto" x="212" y="174">Fase</text><text class="d-sub" x="212" y="193">catálogo</text></g>
+            <g style="--retraso:.6s"><rect class="d-caja" x="304" y="150" width="86" height="56" rx="6"/><text class="d-texto" x="316" y="174">Estado</text><text class="d-sub" x="316" y="193">catálogo</text></g>
+            <path class="d-linea" style="--retraso:.8s" d="M130 52H200M130 178H160V96H200M243 110V150M347 110V150"/>
+            <text class="d-cota-texto" x="138" y="46">1</text><text class="d-cota-texto" x="188" y="46">N</text>
+          </svg>
+          <div class="plano-pie">
+            <span class="nota chica">llaves foráneas en todo</span>
+            <ul class="stack"><li>PHP</li><li>MySQL</li><li>SQL</li><li>DataTables</li></ul>
+          </div>
+        </article>
+
+        <article class="plano-sistema revelar">
+          <header class="plano-cabeza">
+            <span class="lamina-num">Lámina 2.4</span>
+            <span class="estado" data-estado="uso">En uso</span>
+          </header>
+          <h3>Reportes en PDF desde ColdFusion</h3>
+          <p>La consulta sale de SQL Server, ColdFusion arma el documento y el PDF queda con texto justificado, aunque los campos traigan párrafos largos.</p>
+          <svg viewBox="0 0 400 220" class="por-dibujar" role="img" aria-label="SQL Server entrega datos a ColdFusion que genera un PDF">
+            <g style="--retraso:0s">
+              <path class="d-caja" d="M20 70c0-10 80-10 80 0v80c0 10-80 10-80 0z"/>
+              <path class="d-linea" d="M20 70c0 10 80 10 80 0"/>
+              <text class="d-texto" x="60" y="118" text-anchor="middle">SQL</text><text class="d-sub" x="60" y="136" text-anchor="middle">Server</text>
+            </g>
+            <g style="--retraso:.3s"><rect class="d-caja activa" x="142" y="80" width="116" height="60" rx="8"/><text class="d-texto" x="156" y="106">ColdFusion</text><text class="d-sub" x="156" y="125">arma el PDF</text></g>
+            <g style="--retraso:.6s">
+              <path class="d-caja" d="M300 50h60l20 20v110h-80z"/>
+              <path class="d-linea" d="M360 50v20h20"/>
+              <path class="d-linea" d="M312 92h56M312 104h56M312 116h56M312 128h56M312 140h56M312 152h34"/>
+            </g>
+            <path class="d-linea" style="--retraso:.9s" d="M100 110H142M258 110H300"/>
+            <text class="d-cota-texto" x="121" y="102" text-anchor="middle">DSN</text>
+            <text class="d-lapiz" x="290" y="206" text-anchor="end">justificado, sin cortes</text>
+          </svg>
+          <div class="plano-pie">
+            <span class="nota chica">mi día a día</span>
+            <ul class="stack"><li>ColdFusion</li><li>SQL Server</li><li>JavaScript</li></ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="pie">
@@ -107,5 +220,6 @@
 </aside>
 
 <script src="js/plano.js"></script>
+<script src="js/sistemas.js"></script>
 </body>
 </html>

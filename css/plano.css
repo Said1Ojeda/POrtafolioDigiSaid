@@ -356,6 +356,46 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 .por-dibujar:not(.dibujar) .d-linea, .por-dibujar:not(.dibujar) .d-caja { stroke-dasharray: var(--largo, 600); stroke-dashoffset: var(--largo, 600); }
 .por-dibujar:not(.dibujar) .d-texto, .por-dibujar:not(.dibujar) .d-sub, .por-dibujar:not(.dibujar) .d-lapiz, .por-dibujar:not(.dibujar) .d-cota-texto { opacity: 0; }
 
+/* matriz de proyectos */
+.matriz-barra { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+    font: inherit;
+    font-size: .92rem;
+    font-weight: 500;
+    color: var(--tinta-2);
+    background: transparent;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    padding: 5px 14px;
+    cursor: pointer;
+}
+.chip:hover { color: var(--tinta); border-color: var(--trazo-suave); }
+.chip[aria-pressed="true"] { color: var(--fondo); background: var(--trazo); border-color: var(--trazo); }
+.matriz-resumen { color: var(--tinta-3); font-size: .9rem; }
+
+.matriz-marco { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--panel); overflow: hidden; }
+.matriz { width: 100%; border-collapse: collapse; }
+.matriz thead th {
+    text-align: left;
+    font-weight: 600;
+    font-size: .85rem;
+    color: var(--tinta-3);
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--borde);
+}
+.matriz td, .matriz tbody th { padding: 14px 18px; border-bottom: 1px dashed var(--borde); vertical-align: top; text-align: left; font-weight: 400; }
+.matriz tbody tr:last-child td, .matriz tbody tr:last-child th { border-bottom: 0; }
+.matriz tbody tr:hover { background: var(--cuadricula); }
+.m-nombre { display: block; font-family: var(--letra-titulo); font-weight: 700; font-size: 1.12rem; color: var(--tinta); }
+.m-desc { display: block; color: var(--tinta-2); font-size: .95rem; max-width: 58ch; }
+.m-stack { width: 30%; }
+.m-enlaces { white-space: nowrap; text-align: right !important; }
+.m-enlaces a { margin-left: 12px; font-weight: 600; }
+.privado { color: var(--tinta-3); font-size: .88rem; }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.matriz-nota { margin: 14px 0 0; text-align: right; }
+
 /* cajetin de plano, dice en que hoja vas */
 .cajetin {
     position: fixed;
@@ -394,6 +434,15 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 }
 
 @media (max-width: 560px) {
+    .matriz thead { display: none; }
+    .matriz tr { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px 16px; border-bottom: 1px dashed var(--borde); }
+    .matriz tbody tr:last-child { border-bottom: 0; }
+    .matriz td, .matriz tbody th { padding: 0; border: 0; }
+    .matriz tbody th { grid-column: 1 / -1; }
+    .m-stack { width: auto; }
+    .m-enlaces { text-align: left !important; grid-column: 1 / -1; }
+    .m-enlaces a { margin: 0 14px 0 0; }
+    .matriz-nota { text-align: left; }
     .hoja { padding: 72px 0 56px; }
     .cajetin { left: 12px; right: 12px; bottom: 12px; }
     .cajetin div { border-bottom: 0 !important; border-right: 1px solid var(--borde) !important; }

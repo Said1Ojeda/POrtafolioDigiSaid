@@ -290,6 +290,7 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
     animation: aparecer .5s ease forwards;
     animation-delay: calc(var(--retraso, 0s) + .6s);
 }
+.dibujar .d-lapiz { opacity: 0; animation: aparecer .6s ease 2.2s forwards; }
 @keyframes trazar { to { stroke-dashoffset: 0; } }
 @keyframes aparecer { to { opacity: 1; } }
 
@@ -346,6 +347,6 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .dibujar .d-linea, .dibujar .d-caja { stroke-dashoffset: 0; }
-    .dibujar .d-texto, .dibujar .d-sub { opacity: 1; }
+    .dibujar .d-texto, .dibujar .d-sub, .dibujar .d-lapiz { opacity: 1; }
     .js .revelar { opacity: 1; transform: none; }
 }

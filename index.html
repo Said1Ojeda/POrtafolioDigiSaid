@@ -203,6 +203,28 @@
     </div>
   </section>
 
+  <section class="hoja" id="matriz" data-hoja="03" data-titulo="Proyectos">
+    <div class="envoltura">
+      <div class="rotulo"><span class="num">03</span><h2>Proyectos</h2></div>
+      <p class="intro">Todo lo que he hecho, en una sola matriz. El estado dice la verdad: qué se usa a diario, qué pasó pruebas, qué quedó en prototipo y qué es de la universidad.</p>
+
+      <div class="matriz-barra">
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar proyectos"></div>
+        <span class="matriz-resumen" id="matriz-resumen" aria-live="polite"></span>
+      </div>
+
+      <div class="matriz-marco revelar">
+        <table class="matriz">
+          <thead>
+            <tr><th scope="col">Proyecto</th><th scope="col">Con qué</th><th scope="col">Estado</th><th scope="col"><span class="oculto">Enlaces</span></th></tr>
+          </thead>
+          <tbody id="matriz-cuerpo"></tbody>
+        </table>
+      </div>
+      <p class="nota matriz-nota">los del trabajo no tienen código público, son de la institución</p>
+    </div>
+  </section>
+
 </main>
 
 <footer class="pie">
@@ -221,5 +243,6 @@
 
 <script src="js/plano.js"></script>
 <script src="js/sistemas.js"></script>
+<script src="js/proyectos.js"></script>
 </body>
 </html>

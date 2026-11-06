@@ -3,661 +3,105 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Said Ojeda · Desarrollador</title>
-<meta name="description" content="Said Ojeda, desarrollador y estudiante de Ingeniería en Sistemas en Guatemala. Convierto procesos de oficina en sistemas web, Power Apps y automatizaciones.">
-<meta property="og:title" content="Said Ojeda · Desarrollador">
-<meta property="og:description" content="Convierto el papeleo de una oficina en sistemas que se hacen solos.">
+<title>Said Ojeda · Desarrollador full-stack</title>
+<meta name="description" content="Said Ojeda Fabián, desarrollador full-stack en Guatemala. Sistemas administrativos, automatización con Power Platform y bases de datos.">
+<meta name="theme-color" content="#0d2847">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{
-  --papel:#F4F7FB;
-  --hoja:#FFFFFF;
-  --tinta:#14213D;
-  --tinta-suave:#4A5672;
-  --cielo:#3E8ED0;
-  --cielo-claro:#DCEBF8;
-  --sol:#FFC93C;
-  --sol-claro:#FFF1C7;
-  --linea:#D6DEEA;
-  --sombra:0 1px 2px rgba(20,33,61,.06),0 12px 32px -12px rgba(20,33,61,.18);
-  --display:"Bricolage Grotesque",system-ui,sans-serif;
-  --texto:"Instrument Sans",system-ui,sans-serif;
-}
-@media (prefers-color-scheme:dark){
-  :root{
-    --papel:#0F1830;
-    --hoja:#17223F;
-    --tinta:#EEF3FA;
-    --tinta-suave:#A9B6CF;
-    --cielo:#6CB0E8;
-    --cielo-claro:#1D3358;
-    --sol:#FFD15C;
-    --sol-claro:#3A3216;
-    --linea:#2A3858;
-    --sombra:0 1px 2px rgba(0,0,0,.3),0 16px 40px -16px rgba(0,0,0,.6);
-  }
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--papel);color:var(--tinta);
-  font:400 1.0625rem/1.6 var(--texto);
-  -webkit-font-smoothing:antialiased;
-}
-a{color:inherit}
-:focus-visible{outline:3px solid var(--cielo);outline-offset:3px;border-radius:4px}
-.envoltura{max-width:1120px;margin:0 auto;padding:0 20px}
-h1,h2,h3{font-family:var(--display);line-height:1.08;letter-spacing:-.02em}
-
-/* barra */
-.barra{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--papel) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
-.barra .envoltura{display:flex;align-items:center;justify-content:space-between;height:64px}
-.marca{font-family:var(--display);font-weight:800;font-size:1.25rem;text-decoration:none}
-.marca span{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sol);margin-left:4px;vertical-align:middle}
-.barra nav{display:flex;gap:22px}
-.barra nav a{text-decoration:none;color:var(--tinta-suave);font-weight:500;font-size:.95rem}
-.barra nav a:hover{color:var(--tinta)}
-
-/* portada */
-.portada{padding:72px 0 88px}
-.portada .envoltura{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
-.saludo{color:var(--tinta-suave);font-weight:500;margin-bottom:14px}
-.portada h1{font-size:clamp(2.4rem,5.4vw,4.1rem);font-weight:800;margin-bottom:22px;max-width:14ch}
-.portada p.intro{font-size:1.15rem;color:var(--tinta-suave);max-width:46ch;margin-bottom:30px}
-.acciones{display:flex;flex-wrap:wrap;gap:12px}
-.boton{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid var(--tinta);transition:transform .15s}
-.boton:hover{transform:translateY(-2px)}
-.boton.lleno{background:var(--tinta);color:var(--papel)}
-.boton svg{width:18px;height:18px}
-.datos{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:34px;color:var(--tinta-suave);font-size:.95rem}
-.datos b{color:var(--tinta);font-weight:600}
-
-/* la hoja de tramite */
-.hoja{position:relative;background:var(--hoja);border:1px solid var(--linea);border-radius:6px;box-shadow:var(--sombra);padding:34px 34px 96px;transform:rotate(1.2deg)}
-.hoja::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:repeating-linear-gradient(90deg,var(--cielo) 0 24%,transparent 24% 26%,var(--sol) 26% 50%,transparent 50% 52%);border-radius:6px 6px 0 0;opacity:.9}
-.hoja-titulo{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--tinta);padding-bottom:10px;margin-bottom:16px}
-.hoja-titulo h2{font-size:1.15rem}
-.correlativo{font-family:var(--display);font-weight:700;color:var(--cielo);font-size:.95rem}
-.campo{display:grid;grid-template-columns:78px 1fr;gap:10px;padding:11px 0;border-bottom:1px dashed var(--linea);font-size:.98rem}
-.campo dt{color:var(--tinta-suave)}
-.campo dd{font-weight:500}
-.hoja .nota{margin-top:16px;font-size:.92rem;color:var(--tinta-suave)}
-.sello{position:absolute;right:28px;bottom:24px;border:3px solid var(--cielo);color:var(--cielo);border-radius:10px;padding:6px 14px;font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:.06em;transform:rotate(-12deg);background:color-mix(in srgb,var(--hoja) 70%,transparent);animation:sellar .55s cubic-bezier(.2,1.6,.4,1) .5s both}
-.sello small{display:block;font-size:.62rem;letter-spacing:.04em;font-weight:700;text-align:center}
-@keyframes sellar{0%{opacity:0;transform:rotate(-12deg) scale(2.2)}100%{opacity:1;transform:rotate(-12deg) scale(1)}}
-
-/* secciones */
-section{padding:84px 0}
-.cabeza{max-width:640px;margin-bottom:44px}
-.cabeza h2{font-size:clamp(2rem,3.8vw,2.8rem);margin-bottom:12px}
-.cabeza p{color:var(--tinta-suave);font-size:1.08rem}
-
-/* proyecto estrella */
-.estrella{background:var(--hoja);border:1px solid var(--linea);border-radius:20px;box-shadow:var(--sombra);display:grid;grid-template-columns:1.15fr .85fr;overflow:hidden;margin-bottom:28px}
-.estrella-texto{padding:38px}
-.tipo{display:inline-block;font-size:.85rem;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--cielo-claro);color:var(--tinta);margin-bottom:14px}
-.tipo.sol{background:var(--sol-claro)}
-.estrella h3{font-size:clamp(1.6rem,3vw,2.15rem);margin-bottom:12px}
-.estrella-texto>p{color:var(--tinta-suave);margin-bottom:20px;max-width:56ch}
-.lista{list-style:none;display:grid;gap:8px;margin-bottom:22px}
-.lista li{padding-left:22px;position:relative}
-.lista li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:10px;border-radius:3px;background:var(--sol)}
-.stack{display:flex;flex-wrap:wrap;gap:6px}
-.stack span{font-size:.82rem;font-weight:500;border:1px solid var(--linea);border-radius:6px;padding:3px 9px;color:var(--tinta-suave)}
-
-.ponderada{background:var(--cielo-claro);padding:34px 30px;display:flex;flex-direction:column;justify-content:center;gap:22px}
-.ponderada h4{font-family:var(--display);font-size:1.15rem}
-.ponderada p{font-size:.95rem;color:var(--tinta-suave)}
-.comparacion{display:grid;gap:16px}
-.fila-barra{display:grid;gap:6px}
-.fila-barra .etq{display:flex;justify-content:space-between;font-size:.9rem;font-weight:600}
-.pista{height:14px;background:color-mix(in srgb,var(--hoja) 70%,transparent);border-radius:99px;overflow:hidden}
-.pista i{display:block;height:100%;border-radius:99px;background:var(--tinta);width:var(--w);transition:width .6s ease}
-.pista i.peso{background:var(--cielo)}
-.selector{display:flex;gap:6px;background:var(--hoja);border-radius:999px;padding:4px;width:max-content}
-.selector button{border:0;background:transparent;font:600 .9rem var(--texto);color:var(--tinta-suave);padding:7px 14px;border-radius:999px;cursor:pointer}
-.selector button[aria-pressed="true"]{background:var(--tinta);color:var(--papel)}
-
-/* otros proyectos */
-.proyectos{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.proyecto{background:var(--hoja);border:1px solid var(--linea);border-radius:16px;padding:28px}
-.proyecto h3{font-size:1.4rem;margin-bottom:8px}
-.proyecto>p{color:var(--tinta-suave);margin-bottom:16px}
-details{margin-bottom:16px}
-summary{cursor:pointer;font-weight:600;color:var(--cielo);list-style:none;display:inline-flex;align-items:center;gap:6px}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";font-size:1.2rem;line-height:1;transition:transform .2s}
-details[open] summary::after{transform:rotate(45deg)}
-details .lista{margin:14px 0 0}
-.proyecto.abierto{border-style:dashed}
-.proyecto.abierto a{font-weight:600;color:var(--cielo)}
-
-/* repos en vivo desde la api de github */
-.github-datos{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
-.dato{background:var(--hoja);border:1px solid var(--linea);border-radius:14px;padding:14px 20px;min-width:140px}
-.dato b{display:block;font-family:var(--display);font-size:1.8rem;line-height:1.1}
-.dato span{color:var(--tinta-suave);font-size:.9rem}
-.repos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.repo{background:var(--hoja);border:1px solid var(--linea);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;min-height:190px}
-.repo h3{font-size:1.15rem;word-break:break-word}
-.repo h3 a{color:inherit;text-decoration:none}
-.repo h3 a:hover{color:var(--cielo)}
-.repo p{color:var(--tinta-suave);font-size:.95rem;flex:1}
-.repo-pie{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-size:.85rem;color:var(--tinta-suave)}
-.repo-pie i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px;background:var(--c,var(--linea))}
-.repo-probar{font-weight:600;color:var(--cielo);text-decoration:none;font-size:.9rem}
-.repo.cargando{background:linear-gradient(90deg,var(--hoja),var(--papel),var(--hoja));background-size:200% 100%;animation:brillo 1.4s linear infinite}
-@keyframes brillo{to{background-position:-200% 0}}
-.repos-aviso{grid-column:1/-1;color:var(--tinta-suave)}
-.repos-aviso a{color:var(--cielo);font-weight:600}
-
-/* habilidades */
-.cajas{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
-.caja h3{font-size:1.2rem;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.caja h3::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c,var(--cielo))}
-.caja p{color:var(--tinta-suave);font-size:.98rem;margin-bottom:12px}
-
-/* trayectoria */
-.linea-tiempo{list-style:none;border-left:3px solid var(--linea);margin-left:8px;display:grid;gap:30px;max-width:720px}
-.linea-tiempo li{position:relative;padding-left:28px}
-.linea-tiempo li::before{content:"";position:absolute;left:-10px;top:6px;width:17px;height:17px;border-radius:50%;background:var(--papel);border:3px solid var(--cielo)}
-.linea-tiempo li:last-child::before{background:var(--sol);border-color:var(--sol)}
-.anio{font-family:var(--display);font-weight:700;color:var(--cielo)}
-.linea-tiempo h3{font-size:1.2rem;margin:2px 0 4px}
-.linea-tiempo p{color:var(--tinta-suave)}
-
-/* contacto */
-.contacto{background:var(--tinta);color:var(--papel);border-radius:28px;padding:56px 44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.contacto h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:14px}
-.contacto p{opacity:.8;max-width:42ch}
-.canales{display:grid;gap:10px}
-.canal{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;padding:16px 20px;border-radius:14px;background:color-mix(in srgb,var(--papel) 9%,transparent);transition:background .15s}
-.canal:hover{background:color-mix(in srgb,var(--papel) 16%,transparent)}
-.canal b{font-weight:600}
-.canal span{opacity:.75;font-size:.95rem}
-.canal.principal{background:var(--sol);color:#14213D}
-.canal.principal span{opacity:.85}
-@media (prefers-color-scheme:dark){
-  .contacto{background:var(--hoja);color:var(--tinta);border:1px solid var(--linea)}
-  .canal{background:color-mix(in srgb,var(--tinta) 7%,transparent)}
-  .canal:hover{background:color-mix(in srgb,var(--tinta) 13%,transparent)}
-}
-
-footer{padding:40px 0 56px;color:var(--tinta-suave);font-size:.92rem}
-footer .envoltura{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
-
-@media (max-width:900px){
-  .repos{grid-template-columns:1fr 1fr}
-  .portada .envoltura,.estrella,.contacto{grid-template-columns:1fr}
-  .cajas{grid-template-columns:1fr 1fr}
-  .proyectos{grid-template-columns:1fr}
-  .hoja{transform:none;max-width:480px}
-}
-@media (max-width:620px){
-  .repos{grid-template-columns:1fr}
-  .barra nav{display:none}
-  .portada{padding:44px 0 64px}
-  section{padding:64px 0}
-  .cajas{grid-template-columns:1fr}
-  .estrella-texto,.ponderada{padding:26px 22px}
-  .contacto{padding:36px 22px;border-radius:20px}
-  .hoja{padding:26px 20px 90px}
-  .sello{right:18px;bottom:20px}
-}
-@media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  html{scroll-behavior:auto}
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/plano.css">
+<script>
+  // el tema se pone antes de pintar para que no parpadee
+  try { var t = localStorage.getItem('plano-tema'); if (t) document.documentElement.dataset.tema = t; } catch (e) {}
+  document.documentElement.classList.add('js');
+</script>
 </head>
 <body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
 
 <header class="barra">
   <div class="envoltura">
-    <a class="marca" href="#inicio" aria-label="Inicio">Said<span></span></a>
-    <nav aria-label="Secciones">
-      <a href="#proyectos">Proyectos</a>
-      <a href="#github">GitHub</a>
-      <a href="#habilidades">Habilidades</a>
-      <a href="#trayectoria">Trayectoria</a>
-      <a href="#contacto">Contacto</a>
+    <a class="firma" href="#portada" aria-label="Said Ojeda, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="2.5" y="2.5" width="27" height="27" rx="4"/>
+        <path d="M2.5 11.5h27M11.5 2.5v27" opacity=".35"/>
+        <path d="M22 10.5c-1-1.4-2.6-2-4.4-2-2.6 0-4.4 1.4-4.4 3.4 0 4.4 9.2 2.6 9.2 7.6 0 2.2-2 3.8-4.8 3.8-2 0-3.8-.8-4.8-2.4"/>
+      </svg>
+      Said Ojeda
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#sistemas">Sistemas</a>
+      <a href="#matriz">Proyectos</a>
+      <a href="#laboratorio">Laboratorio</a>
+      <a class="siempre" href="#contacto">Contacto</a>
+      <button class="boton-tema" type="button" id="tema" aria-label="Cambiar tema claro u oscuro">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
     </nav>
   </div>
 </header>
 
-<main id="inicio">
-  <section class="portada">
+<main id="contenido">
+
+  <section class="hoja portada" id="portada" data-hoja="01" data-titulo="Portada">
     <div class="envoltura">
       <div>
-        <p class="saludo">Hola, soy Said Ojeda 👋</p>
-        <h1>Agarro el papeleo de una oficina y lo vuelvo un sistema.</h1>
-        <p class="intro">Desarrollo sistemas web, Power Apps y automatizaciones para que la gente deje de llevar el control en cuadernos, correos y hojas de Excel. Estudio Ingeniería en Sistemas y trabajo como desarrollador al mismo tiempo.</p>
+        <p class="quien"><span class="punto" aria-hidden="true"></span> Said Ojeda Fabián · Guatemala</p>
+        <h1>Diseño sistemas que la gente <span class="cota">usa todos los días.</span></h1>
+        <p class="lead">Desarrollador full-stack. Hago aplicaciones administrativas en PHP y MySQL, automatizo procesos con Power Platform y modelo bases de datos. Estudio Ingeniería en Sistemas en la Universidad Mariano Gálvez.</p>
         <div class="acciones">
-          <a class="boton lleno" href="#proyectos">Ver mis proyectos</a>
-          <a class="boton" href="https://wa.me/50237808239?text=Hola%20Said,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20platicar." target="_blank" rel="noopener">Escribirme por WhatsApp</a>
+          <a class="boton lleno" href="#sistemas">
+            Ver los sistemas
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+          <a class="boton linea" href="#contacto">Escríbeme</a>
         </div>
-        <p class="datos"><span><b>22 años</b></span><span>Ciudad de Guatemala</span><span>6to semestre en la <b>UMG</b></span></p>
+        <div class="cifras" aria-live="polite">
+          <div class="cifra"><b id="c-repos">20+</b><span>repos públicos</span></div>
+          <div class="cifra"><b id="c-prs">50+</b><span>PRs aceptados en público</span></div>
+          <div class="cifra"><b id="c-proyectos">18</b><span>proyectos documentados</span></div>
+        </div>
       </div>
 
-      <article class="hoja" aria-label="Hoja de trámite de presentación">
-        <div class="hoja-titulo">
-          <h2>Hoja de trámite</h2>
-          <span class="correlativo">SO-0001-2026</span>
-        </div>
-        <dl>
-          <div class="campo"><dt>Para</dt><dd>Quien esté leyendo esto</dd></div>
-          <div class="campo"><dt>De</dt><dd>Said Ojeda, desarrollador</dd></div>
-          <div class="campo"><dt>Asunto</dt><dd>Procesos que se hacen solos</dd></div>
-          <div class="campo"><dt>Estado</dt><dd>Disponible para proyectos</dd></div>
-        </dl>
-        <p class="nota">Así se ven los documentos que genera mi sistema de correspondencia, solo que esos llevan firma de verdad.</p>
-        <div class="sello" aria-hidden="true">APROBADO<small>con buena vibra</small></div>
-      </article>
+      <figure class="lamina" aria-labelledby="lamina-titulo">
+        <div class="lamina-cabeza"><span id="lamina-titulo">Flujo de un documento en el sistema de correspondencia</span><span>esc. 1:1</span></div>
+        <svg viewBox="0 0 520 380" class="dibujar" role="img" aria-label="Diagrama: recepción, asignación, seguimiento, notificación y cierre de un documento">
+          <path class="d-cota" d="M30 14h460M30 9v10M490 9v10"/>
+          <text class="d-cota-texto" x="260" y="8" text-anchor="middle">un solo flujo, de punta a punta</text>
+
+          <path id="ruta-doc" class="d-linea" style="--largo:900;--retraso:.5s" d="M210 75H310M400 110V180M310 215H210M120 250V320H170"/>
+
+          <g style="--retraso:0s"><rect class="d-caja" style="--largo:520" x="30" y="40" width="180" height="70" rx="8"/><text class="d-texto" x="50" y="70">Recepción</text><text class="d-sub" x="50" y="90">registro y correlativo</text></g>
+          <g style="--retraso:.3s"><rect class="d-caja" style="--largo:520" x="310" y="40" width="180" height="70" rx="8"/><text class="d-texto" x="330" y="70">Asignación</text><text class="d-sub" x="330" y="90">a cada analista</text></g>
+          <g style="--retraso:.6s"><rect class="d-caja" style="--largo:520" x="310" y="180" width="180" height="70" rx="8"/><text class="d-texto" x="330" y="210">Seguimiento</text><text class="d-sub" x="330" y="230">estados y bitácora</text></g>
+          <g style="--retraso:.9s"><rect class="d-caja" style="--largo:520" x="30" y="180" width="180" height="70" rx="8"/><text class="d-texto" x="50" y="210">Notificación</text><text class="d-sub" x="50" y="230">correo automático</text></g>
+          <g style="--retraso:1.2s"><rect class="d-caja activa" style="--largo:520" x="170" y="290" width="180" height="70" rx="8"/><text class="d-texto" x="190" y="320">Cierre</text><text class="d-sub" x="190" y="340">documento en Word</text></g>
+
+          <circle class="d-pulso" r="5">
+            <animateMotion dur="5s" repeatCount="indefinite" begin="2.2s" path="M120 75H400V215H120V320H260"/>
+          </circle>
+        </svg>
+        <figcaption class="nota">en uso en el trabajo, a diario</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section id="proyectos">
-    <div class="envoltura">
-      <div class="cabeza">
-        <h2>Lo que he construido</h2>
-        <p>Casi todo nació de un problema real de alguien que tenía que hacer lo mismo a mano todos los días.</p>
-      </div>
-
-      <article class="estrella">
-        <div class="estrella-texto">
-          <span class="tipo">Sistema web · el favorito</span>
-          <h3>Sistema de Correspondencia</h3>
-          <p>Empezó para registrar los documentos que entran a un área de Reclutamiento y Selección. Hoy es donde el equipo reparte el trabajo, genera sus documentos y ve quién está saturado.</p>
-          <ul class="lista">
-            <li>Cada documento con su PDF, número de tarea y responsable, y aviso por correo al asignarlo.</li>
-            <li>Correlativos automáticos para oficios y memos de varias áreas.</li>
-            <li>Hojas de trámite en Word generadas con un clic.</li>
-            <li>Dashboard de cargas laborales con carga ponderada.</li>
-            <li>Roles, bitácora de acciones e importación desde CSV.</li>
-          </ul>
-          <div class="stack"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Chart.js</span><span>Power Automate</span></div>
-        </div>
-        <div class="ponderada">
-          <div>
-            <h4>¿Quién tiene más trabajo?</h4>
-            <p>Contar filas engaña. La carga ponderada le da peso a cada plaza según su fase, su estado y sus atrasos.</p>
-          </div>
-          <div class="selector" role="group" aria-label="Forma de medir">
-            <button type="button" aria-pressed="false" data-modo="conteo">Contar plazas</button>
-            <button type="button" aria-pressed="true" data-modo="peso">Carga ponderada</button>
-          </div>
-          <div class="comparacion">
-            <div class="fila-barra">
-              <div class="etq"><span>Profesional A</span><span data-a>5.7 pts</span></div>
-              <div class="pista"><i class="peso" data-barra-a style="--w:39%"></i></div>
-            </div>
-            <div class="fila-barra">
-              <div class="etq"><span>Profesional B</span><span data-b>14.7 pts</span></div>
-              <div class="pista"><i class="peso" data-barra-b style="--w:100%"></i></div>
-            </div>
-          </div>
-          <p data-explica>Los dos tienen 3 plazas, pero las de B están en fases pesadas y con atrasos.</p>
-        </div>
-      </article>
-
-      <div class="proyectos">
-        <article class="proyecto">
-          <span class="tipo sol">Power App</span>
-          <h3>Quiniela del Mundial 2026</h3>
-          <p>Toda la institución dejó sus pronósticos en una app con puntos automáticos y ranking en vivo, en vez de hojas de Excel dando vueltas por correo.</p>
-          <details>
-            <summary>Ver qué hace</summary>
-            <ul class="lista">
-              <li>Pronósticos por usuario y validación de resultados.</li>
-              <li>Puntos calculados solos y ranking en tiempo real.</li>
-              <li>Filtros por grupo, fase y partidos terminados.</li>
-              <li>Resultados automatizados con Power Automate.</li>
-            </ul>
-          </details>
-          <div class="stack"><span>Power Apps</span><span>Power Fx</span><span>SharePoint</span><span>Power Automate</span></div>
-        </article>
-
-        <article class="proyecto">
-          <span class="tipo sol">Power App</span>
-          <h3>Registro masivo con QR</h3>
-          <p>Una app que registra participantes y le genera a cada uno su código QR, y otra que los escanea para validar al instante.</p>
-          <details>
-            <summary>Ver qué hace</summary>
-            <ul class="lista">
-              <li>Registro masivo con validación antes de guardar.</li>
-              <li>QR único por persona.</li>
-              <li>Consulta y validación con la cámara del cel.</li>
-              <li>Datos en SharePoint y Excel Online.</li>
-            </ul>
-          </details>
-          <div class="stack"><span>Power Apps</span><span>SharePoint</span><span>Power Automate</span><span>Office 365</span></div>
-        </article>
-
-        <article class="proyecto">
-          <span class="tipo">Herramienta web · código abierto</span>
-          <h3>ConvertDocs</h3>
-          <p>Una caja de herramientas para PDFs: comprimir, unir, separar, reordenar y convertir, todo desde el navegador y sin subir los archivos a ningún lado. La usan en la gerencia y ahora cualquiera la puede usar.</p>
-          <p><a href="https://said1ojeda.github.io/ConvertDocs/" target="_blank" rel="noopener">Usarla en línea</a> · <a href="https://github.com/Said1Ojeda/ConvertDocs" target="_blank" rel="noopener">Ver el código</a></p>
-          <details>
-            <summary>Ver qué hace</summary>
-            <ul class="lista">
-              <li>Comprime PDFs con distintos niveles de calidad.</li>
-              <li>Une, separa y reordena páginas arrastrándolas.</li>
-              <li>Convierte imágenes a PDF y PDF a Word o Excel.</li>
-              <li>PDF a Word sin internet, con OCR para los escaneados.</li>
-              <li>Vista previa con miniaturas y modo oscuro.</li>
-            </ul>
-          </details>
-          <div class="stack"><span>JavaScript</span><span>PDF.js</span><span>PDF-Lib</span><span>Tesseract</span><span>Tailwind</span></div>
-        </article>
-
-        <article class="proyecto">
-          <span class="tipo">Sistema web</span>
-          <h3>Gestión eclesiástica</h3>
-          <p>Para que una iglesia lleve en un solo lugar sus miembros, áreas de servicio, clases de doctrina, notas y asistencias.</p>
-          <details>
-            <summary>Ver qué hace</summary>
-            <ul class="lista">
-              <li>Miembros con foto y expediente individual.</li>
-              <li>Períodos de doctrina con notas, asistencias y promociones.</li>
-              <li>Reportes en PDF y bitácora de acciones.</li>
-              <li>Permisos por rol.</li>
-            </ul>
-          </details>
-          <div class="stack"><span>PHP</span><span>PDO</span><span>MySQL</span><span>Dompdf</span><span>DataTables</span></div>
-        </article>
-
-        <article class="proyecto">
-          <span class="tipo">Sistema web</span>
-          <h3>Gestión escolar</h3>
-          <p>Alumnos, docentes, cursos, horarios, notas y asistencia, con un acceso distinto para cada rol.</p>
-          <div class="stack"><span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Bootstrap</span></div>
-        </article>
-
-        <article class="proyecto">
-          <span class="tipo sol">Excel VBA</span>
-          <h3>Banco de candidatos y reportes</h3>
-          <p>Antes de los sistemas web, Excel. Login por usuario, formularios propios y reportes con filtros en cascada que se exportan solos.</p>
-          <div class="stack"><span>VBA</span><span>UserForms</span><span>Macros</span></div>
-        </article>
-
-        <article class="proyecto abierto">
-          <span class="tipo">Código abierto</span>
-          <h3>coldfusion8-recetas</h3>
-          <p>Soluciones que me funcionaron en ColdFusion 8, como justificar texto en PDF o traer textos largos por DSN. Las publico para que nadie más pierda horas en lo mismo.</p>
-          <p><a href="https://github.com/Said1Ojeda/coldfusion8-recetas" target="_blank" rel="noopener">Ver el repo en GitHub</a></p>
-        </article>
-
-        <article class="proyecto abierto">
-          <span class="tipo">En la U</span>
-          <h3>Proyectos de clase</h3>
-          <p>Una app de métodos numéricos, un sistema en C# con arquitectura por capas y estructuras de datos como árboles y grafos.</p>
-          <p><a href="https://github.com/Said1Ojeda" target="_blank" rel="noopener">Ver todos en GitHub</a></p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="github">
-    <div class="envoltura">
-      <div class="cabeza">
-        <h2>Activo en GitHub</h2>
-        <p>Lo último que he subido, directo de GitHub. Hay juegos y cosas que se pueden probar en el navegador, y si alguno te gusta una estrella ayuda bastante.</p>
-      </div>
-      <div class="github-datos" id="githubDatos" aria-live="polite"></div>
-      <div class="repos" id="repos" aria-live="polite">
-        <div class="repo cargando" aria-hidden="true"></div>
-        <div class="repo cargando" aria-hidden="true"></div>
-        <div class="repo cargando" aria-hidden="true"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="habilidades">
-    <div class="envoltura">
-      <div class="cabeza">
-        <h2>Con qué trabajo</h2>
-        <p>Uso la herramienta que le queda al problema, aunque sea un ColdFusion de 2008.</p>
-      </div>
-      <div class="cajas">
-        <div class="caja">
-          <h3>Sistemas web</h3>
-          <p>De la pantalla a la base de datos, con sesiones, roles, permisos y reportes.</p>
-          <div class="stack"><span>PHP</span><span>ColdFusion</span><span>JavaScript</span><span>HTML/CSS</span><span>Bootstrap</span></div>
-        </div>
-        <div class="caja" style="--c:var(--sol)">
-          <h3>Power Platform</h3>
-          <p>Apps y flujos conectados a Microsoft 365, para que todo pase sin abrir un correo.</p>
-          <div class="stack"><span>Power Apps</span><span>Power Automate</span><span>SharePoint</span><span>Power BI</span></div>
-        </div>
-        <div class="caja">
-          <h3>Datos</h3>
-          <p>Modelo bases relacionales, armo consultas y saco dashboards que se entiendan.</p>
-          <div class="stack"><span>MySQL</span><span>SQL Server</span><span>Chart.js</span><span>Excel</span></div>
-        </div>
-        <div class="caja" style="--c:var(--sol)">
-          <h3>Lo de la U</h3>
-          <p>La base que hace que lo demás salga ordenado y no a puro parche.</p>
-          <div class="stack"><span>C#</span><span>Estructuras de datos</span><span>Métodos numéricos</span><span>Git</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="trayectoria">
-    <div class="envoltura">
-      <div class="cabeza">
-        <h2>Cómo he llegado aquí</h2>
-      </div>
-      <ol class="linea-tiempo">
-        <li>
-          <span class="anio">2024</span>
-          <h3>Entro a la UMG y hago mis primeros sistemas</h3>
-          <p>Plataformas académicas y administrativas en PHP y MySQL, con usuarios y sesiones.</p>
-        </li>
-        <li>
-          <span class="anio">2025</span>
-          <h3>Automatizo en Excel</h3>
-          <p>Macros, formularios y reportes que le ahorraron horas a la gente que los usaba.</p>
-        </li>
-        <li>
-          <span class="anio">2026</span>
-          <h3>Sistemas institucionales y Power Platform</h3>
-          <p>El sistema de correspondencia, la quiniela, el registro con QR y las herramientas de PDF.</p>
-        </li>
-        <li>
-          <span class="anio">Ahora</span>
-          <h3>6to semestre y buscando lo siguiente</h3>
-          <p>Mejorando lo que ya existe y con ganas de proyectos nuevos.</p>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <section id="contacto">
-    <div class="envoltura">
-      <div class="contacto">
-        <div>
-          <h2>¿Tienes un proceso que todavía se hace a mano?</h2>
-          <p>Cuéntame cómo lo hacen hoy y vemos cómo volverlo un sistema. También platico con gusto de código viejo y automatizaciones.</p>
-        </div>
-        <div class="canales">
-          <a class="canal principal" href="https://wa.me/50237808239?text=Hola%20Said,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20platicar." target="_blank" rel="noopener"><b>WhatsApp</b><span>+502 3780-8239</span></a>
-          <a class="canal" href="mailto:saidfabian12@gmail.com"><b>Correo</b><span>saidfabian12@gmail.com</span></a>
-          <a class="canal" href="https://github.com/Said1Ojeda" target="_blank" rel="noopener"><b>GitHub</b><span>@Said1Ojeda</span></a>
-          <a class="canal" href="https://www.linkedin.com/in/said-ojeda-fabian" target="_blank" rel="noopener"><b>LinkedIn</b><span>Said Ojeda Fabián</span></a>
-          <a class="canal" href="https://instagram.com/unset_said" target="_blank" rel="noopener"><b>Instagram</b><span>@unset_said</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
 </main>
 
-<footer>
+<footer class="pie">
   <div class="envoltura">
-    <span>© 2026 Said Ojeda Fabián</span>
-    <span>Hecho en Guatemala</span>
+    <span>© <span id="anio">2026</span> Said Ojeda Fabián</span>
+    <span>Hecho a mano en HTML, CSS y JavaScript, sin plantillas.</span>
   </div>
 </footer>
 
-<script>
-  // compara contar plazas contra carga ponderada en el proyecto estrella
-  (function () {
-    var datos = {
-      conteo: { a: 3, b: 3, ta: '3 plazas', tb: '3 plazas', max: 3, texto: 'Contando filas, los dos se ven igual de ocupados.' },
-      peso:   { a: 5.7, b: 14.7, ta: '5.7 pts', tb: '14.7 pts', max: 14.7, texto: 'Los dos tienen 3 plazas, pero las de B están en fases pesadas y con atrasos.' }
-    };
-    var botones = document.querySelectorAll('[data-modo]');
-    var barraA = document.querySelector('[data-barra-a]');
-    var barraB = document.querySelector('[data-barra-b]');
-    botones.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var d = datos[btn.dataset.modo];
-        botones.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-        barraA.style.setProperty('--w', (d.a / d.max * 100) + '%');
-        barraB.style.setProperty('--w', (d.b / d.max * 100) + '%');
-        barraA.classList.toggle('peso', btn.dataset.modo === 'peso');
-        barraB.classList.toggle('peso', btn.dataset.modo === 'peso');
-        document.querySelector('[data-a]').textContent = d.ta;
-        document.querySelector('[data-b]').textContent = d.tb;
-        document.querySelector('[data-explica]').textContent = d.texto;
-      });
-    });
-  })();
-</script>
-<script>
-  // trae los repos publicos con la api de github y los pinta en la seccion activo en github
-  // se guardan un rato en la sesion para no gastar el limite de la api en cada recarga
-  (function () {
-    var USUARIO = 'Said1Ojeda';
-    var CLAVE = 'portafolio-github-2';
-    var DURA = 10 * 60 * 1000;
-    var COLORES = { JavaScript: '#f1e05a', TypeScript: '#3178c6', PHP: '#4F5D95', 'C#': '#178600', HTML: '#e34c26', CSS: '#563d7c', ColdFusion: '#ed2cd6', Python: '#3572A5' };
-    var caja = document.getElementById('repos');
-    var datos = document.getElementById('githubDatos');
+<aside class="cajetin" aria-label="Datos del plano">
+  <div><small>Proyecto</small><b>Portafolio</b></div>
+  <div><small>Autor</small><b>S. Ojeda F.</b></div>
+  <div><small>Hoja</small><b><span id="hoja-num">01</span> / 05</b></div>
+  <div><small>Sección</small><b id="hoja-titulo">Portada</b></div>
+</aside>
 
-    function leerGuardado() {
-      try {
-        var g = JSON.parse(sessionStorage.getItem(CLAVE) || 'null');
-        if (g && Date.now() - g.cuando < DURA) return g;
-      } catch (e) {}
-      return null;
-    }
-
-    function guardar(perfil, repos) {
-      try { sessionStorage.setItem(CLAVE, JSON.stringify({ cuando: Date.now(), perfil: perfil, repos: repos })); } catch (e) {}
-    }
-
-    function pedir(url) {
-      return fetch(url, { headers: { Accept: 'application/vnd.github+json' } }).then(function (r) {
-        if (!r.ok) throw new Error('github respondio ' + r.status);
-        return r.json();
-      });
-    }
-
-    function haceCuanto(fecha) {
-      var dias = Math.floor((Date.now() - new Date(fecha).getTime()) / 86400000);
-      if (dias <= 0) return 'hoy';
-      if (dias === 1) return 'ayer';
-      if (dias < 30) return 'hace ' + dias + ' días';
-      var meses = Math.floor(dias / 30);
-      return meses === 1 ? 'hace un mes' : 'hace ' + meses + ' meses';
-    }
-
-    function elemento(tag, clase, texto) {
-      var e = document.createElement(tag);
-      if (clase) e.className = clase;
-      if (texto != null) e.textContent = texto;
-      return e;
-    }
-
-    function dato(numero, texto) {
-      var d = elemento('div', 'dato');
-      d.appendChild(elemento('b', '', String(numero)));
-      d.appendChild(elemento('span', '', texto));
-      return d;
-    }
-
-    // si el repo no trae su sitio en about pero si tiene pages, se arma el enlace de pages
-    function sitio(r) {
-      if (r.homepage && /^https:\/\//.test(r.homepage)) return r.homepage;
-      if (r.has_pages) return 'https://' + USUARIO.toLowerCase() + '.github.io/' + encodeURIComponent(r.name) + '/';
-      return '';
-    }
-
-    function pintar(perfil, repos) {
-      var propios = repos.filter(function (r) { return !r.fork && r.name.toLowerCase() !== USUARIO.toLowerCase(); });
-      var estrellas = propios.reduce(function (t, r) { return t + r.stargazers_count; }, 0);
-
-      datos.replaceChildren(
-        dato(perfil.public_repos, 'repos públicos'),
-        dato(estrellas, estrellas === 1 ? 'estrella' : 'estrellas'),
-        dato(perfil.followers, perfil.followers === 1 ? 'seguidor' : 'seguidores')
-      );
-
-      // primero lo que se movio hace poco
-      propios.sort(function (a, b) { return new Date(b.pushed_at) - new Date(a.pushed_at); });
-      var tarjetas = propios.slice(0, 6).map(function (r) {
-        var t = elemento('article', 'repo');
-        var h = elemento('h3');
-        var a = elemento('a', '', r.name);
-        a.href = r.html_url;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        h.appendChild(a);
-        t.appendChild(h);
-        t.appendChild(elemento('p', '', r.description || 'Sin descripción todavía.'));
-
-        var pie = elemento('div', 'repo-pie');
-        if (r.language) {
-          var len = elemento('span', '', r.language);
-          var punto = elemento('i');
-          punto.style.setProperty('--c', COLORES[r.language] || '#8b95a7');
-          len.prepend(punto);
-          pie.appendChild(len);
-        }
-        pie.appendChild(elemento('span', '', '★ ' + r.stargazers_count));
-        pie.appendChild(elemento('span', '', haceCuanto(r.pushed_at)));
-        t.appendChild(pie);
-
-        var enLinea = sitio(r);
-        if (enLinea) {
-          var probar = elemento('a', 'repo-probar', 'Probarlo en línea →');
-          probar.href = enLinea;
-          probar.target = '_blank';
-          probar.rel = 'noopener';
-          t.appendChild(probar);
-        }
-        return t;
-      });
-      caja.replaceChildren.apply(caja, tarjetas);
-    }
-
-    // si github no responde se deja el enlace al perfil y ya
-    function sinConexion() {
-      datos.replaceChildren();
-      var p = elemento('p', 'repos-aviso', 'No se pudieron cargar los repos en este momento. ');
-      var a = elemento('a', '', 'Verlos en GitHub');
-      a.href = 'https://github.com/' + USUARIO;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      p.appendChild(a);
-      caja.replaceChildren(p);
-    }
-
-    var guardado = leerGuardado();
-    if (guardado) return pintar(guardado.perfil, guardado.repos);
-
-    Promise.all([
-      pedir('https://api.github.com/users/' + USUARIO),
-      pedir('https://api.github.com/users/' + USUARIO + '/repos?per_page=100&type=owner')
-    ]).then(function (r) {
-      guardar(r[0], r[1]);
-      pintar(r[0], r[1]);
-    }).catch(sinConexion);
-  })();
-</script>
+<script src="js/plano.js"></script>
 </body>
 </html>

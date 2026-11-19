@@ -12,7 +12,7 @@
 
     // por si la api no responde o se acaba el limite, se ve algo igual
     var RESPALDO = [
-        { name: 'POrtafolioDigiSaid', description: 'Este portafolio', language: 'CSS', has_pages: true },
+        { name: 'SQL-a-la-Bala', description: 'Aprende SQL Server con retos, directo en el navegador', language: 'JavaScript', has_pages: true },
         { name: 'ConvertDocs', description: 'Herramientas PDF en el navegador, sin subir tus archivos', language: 'JavaScript', has_pages: true },
         { name: 'arbol', description: 'Árboles binarios y AVL paso a paso, con modo retos', language: 'TypeScript', has_pages: true },
         { name: 'JuGeometry', description: 'Juego de ritmo y salto en el navegador', language: 'TypeScript', has_pages: true },

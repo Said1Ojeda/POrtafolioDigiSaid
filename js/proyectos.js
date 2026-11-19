@@ -4,7 +4,6 @@
         uso: 'En uso',
         probado: 'Probado',
         prototipo: 'Prototipo',
-        propuesta: 'Propuesta',
         academico: 'Académico'
     };
     var GH = 'https://github.com/Said1Ojeda/';
@@ -27,14 +26,13 @@
         { n: 'Gestión de una iglesia', d: 'Miembros, expedientes, formación, asistencia, notas y reportes en PDF.', s: ['PHP', 'MySQL', 'PDO', 'Dompdf'], e: 'prototipo', g: ['web'] },
         { n: 'Generador de estampas', d: 'Editor en el navegador para armar estampas y exportarlas como imagen.', s: ['Canvas', 'JavaScript'], e: 'prototipo', g: ['web'] },
         { n: 'JuGeometry', d: 'Juego de ritmo y salto en el navegador, con modos que cambian por portales.', s: ['TypeScript', 'Canvas'], e: 'prototipo', g: ['web'], repo: 'JuGeometry', web: PAGES + 'JuGeometry/' },
+        { n: 'SQL a la Bala', d: 'App para aprender SQL Server con retos, escribiendo T-SQL en el navegador y con los errores explicados.', s: ['JavaScript', 'SQL Server', 'sql.js'], e: 'probado', g: ['web'], repo: 'SQL-a-la-Bala', web: PAGES + 'SQL-a-la-Bala/' },
         { n: 'Recetas de ColdFusion 8', d: 'Soluciones cortas a problemas de todos los días con ColdFusion 8.', s: ['ColdFusion', 'SQL'], e: 'probado', g: ['web'], repo: 'coldfusion8-recetas' },
         { n: 'Árboles binarios paso a paso', d: 'Inserción, recorridos y rotaciones AVL animados, con modo retos.', s: ['TypeScript'], e: 'academico', g: ['academico', 'web'], repo: 'arbol', web: PAGES + 'arbol/' },
         { n: 'Restaurante Delicias', d: 'Mesas, órdenes, cocina y caja en un solo sistema de escritorio.', s: ['C#', 'WinForms', 'SQL Server'], e: 'academico', g: ['academico'], repo: 'RestauranteDelicias' },
         { n: 'Gestión escolar', d: 'Roles de administrador, docente y alumno, horarios, notas y asistencia.', s: ['PHP', 'MySQL', 'Bootstrap'], e: 'academico', g: ['academico', 'web'] },
         { n: 'Métodos numéricos', d: 'Newton-Raphson, secante, Gauss-Jordan y LU con iteraciones y errores a la vista.', s: ['MATLAB'], e: 'academico', g: ['academico'] },
-        { n: 'Estructuras de datos y autómatas', d: 'Pilas, colas, listas, árboles y ejercicios de autómatas.', s: ['C#', 'WinForms'], e: 'academico', g: ['academico'] },
-        { n: 'Misión 5S', d: 'Retos por equipo con evidencias y puntos para promover orden en el trabajo.', s: ['Power Platform'], e: 'propuesta', g: ['power'] },
-        { n: 'Guía de reclutamiento interno', d: 'Etapas, requisitos y preguntas frecuentes en un solo lugar para quien aplica.', s: ['Documentación', 'UX'], e: 'propuesta', g: ['trabajo'] }
+        { n: 'Estructuras de datos y autómatas', d: 'Pilas, colas, listas, árboles y ejercicios de autómatas.', s: ['C#', 'WinForms'], e: 'academico', g: ['academico'] }
     ];
 
     var GRUPOS = [

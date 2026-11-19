@@ -35,7 +35,6 @@ Funciona bien en el cel, se puede usar con teclado y respeta cuando el sistema p
 - **En uso**, se usa de verdad en el día a día.
 - **Probado**, pasó pruebas pero no lo presento como sistema en producción.
 - **Prototipo**, funciona pero quedó a medias o para uso personal.
-- **Propuesta**, idea diseñada que todavía no se construye.
 - **Académico**, hecho para la universidad.
 
 Los sistemas del trabajo no tienen código público. En el portafolio aparecen sin nombres, datos ni nada que identifique a la institución.

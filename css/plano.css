@@ -321,7 +321,6 @@ h1, h2, h3 { font-family: var(--letra-titulo); line-height: 1.1; margin: 0; lett
 .estado[data-estado="uso"] { color: var(--ok); }
 .estado[data-estado="probado"] { color: var(--trazo); }
 .estado[data-estado="prototipo"] { color: var(--tinta-2); border-style: dashed; }
-.estado[data-estado="propuesta"] { color: var(--lapiz); border-style: dashed; }
 .estado[data-estado="academico"] { color: var(--tinta-3); }
 
 .stack { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
